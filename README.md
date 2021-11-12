@@ -2,5 +2,6 @@
 
 
 Team Members:  
-Isar Meijer
-Joshua O'Reilly
+
+- Isar Meijer
+- Joshua O'Reilly
