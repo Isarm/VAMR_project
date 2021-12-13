@@ -45,7 +45,7 @@ S_i = struct;
 KLTPointTracker = vision.PointTracker;
 
 % Initialize Tracking Process
-initialize(KLTPointTracker, P_j, I_j)
+initialize(KLTPointTracker, P_j, I_j);
 
 % Track Points for Current Frame
 [points,validity] = tracker(I_i);
