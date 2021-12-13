@@ -1,4 +1,4 @@
- function [orbFeatures, landmarks3D, R, T] = bootstrap(img0, img1, intrinsics)
+function [orbFeatures, landmarks3D, R, T] = bootstrap(img0, img1, intrinsics)
 %INTITIALIZE Initialize the VO pipeline
 %   Takes 2 initial images, extracts and matches features to determine the
 %   pose. The inlier keypoints are then triangulated, and the orb features 
