@@ -48,7 +48,7 @@ KLTPointTracker = vision.PointTracker;
 initialize(KLTPointTracker, P_j, I_j);
 
 % Track Points for Current Frame
-[points,validity] = tracker(I_i);
+[points,validity] = KLTPointTracker(I_i);
 
 % Update keypoint set by only keeping reliably tracked keypoints (RANSAC)
 P_i = points(:,validity);
