@@ -49,7 +49,7 @@ X_i = X_j(:,validity);
 
 %% Estimate the Current Pose
 % NOTE: estimateWorldCameraPose takes as input Nx2, Nx3 matrices
-% TODO: Correctly handle cameraParams object
+% TODO: TEST THIS FUNCTION AND USE OF INTRINSICS
 [worldOrientation,worldLocation,~] = estimateWorldCameraPose(P_i', X_i', intrinsics);
 
 T_WC_i = [worldOrientation, worldLocation];
@@ -59,6 +59,10 @@ T_WC_i = [worldOrientation, worldLocation];
 % remove lost candidate point data / retain matched candidate point data
 F_i = F_j(:,validity);
 T_i = T_j(:,validity);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%% BELOW HERE IS INCOMPLETE %%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Triangulating New Landmarks
 % TODO: Fill code here
