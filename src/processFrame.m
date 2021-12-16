@@ -54,6 +54,12 @@ X_i = X_j(:,validity);
 
 T_WC_i = [worldOrientation, worldLocation];
 
+%% Track Candidate Keypoints
+[C_i, validity] = trackPoints(I_j, I_i, C_j');
+% remove lost candidate point data / retain matched candidate point data
+F_i = F_j(:,validity);
+T_i = T_j(:,validity);
+
 %% Triangulating New Landmarks
 % TODO: Fill code here
 
