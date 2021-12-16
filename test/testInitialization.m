@@ -85,7 +85,7 @@ figure; showMatchedFeatures(img0,img1,...
     img1ValidPoints(matchIndices(:,2)));
  
 %% Initialization
-[orbFeatures, landmarks3D, R, T] = bootstrap(img0, img1, intrinsics);
+[keyPoints, landmarks3D, R, T] = bootstrap(img0, img1, intrinsics);
 
 
 % plots
