@@ -46,7 +46,6 @@ S_i = struct;
 % Update landmark set by only keeping corresponding landmarks of reliably
 % tracked keypoints (RANSAC)
 X = X(validity, :);
-P = P(validity, :);  % Don't forget to remove these too!
 
 %% Estimate the Current Pose
 % NOTE: estimateWorldCameraPose takes as input Nx2, Nx3 matrices
