@@ -67,6 +67,9 @@ C = C(validity, :); % Don't forget to remove these too!
 alpha = 0.1; % Radians
 [P_new, X_new] = getNewLandmarks(F, C, T, T_WC_i, intrinsics, alpha);
 
+P = [P ; P_new];
+X = [X ; X_new];
+
 %% Store Local Variables in State of Current Frame
 S_i.P = P; % Set of keypoints in the ith (current) frame (K'x2)
 S_i.X = X; % Set of landmarks in the ith (current) frame (K'x3)
