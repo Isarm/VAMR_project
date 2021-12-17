@@ -12,6 +12,12 @@ function [points2, validity] = trackPoints(img1, img2, points1)
     %   validity    = (Nx2) logical array indicating valid points
 
     % track points
+    if isempty(points1)
+        points2 = [];
+        validity = [];
+        return
+    end
+
     pointTracker = vision.PointTracker;
     initialize(pointTracker, points1, img1);
     [matchedPoints, validity] = pointTracker(img2);
