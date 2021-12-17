@@ -40,7 +40,7 @@ end
 % from each camera's origin to the 3D point. 
 
 % Get the origins
-O_F = T_F(13:15)';
+O_F = T_F(:, 13:15)';
 O_C = T_C(1:3,4);
 
 % Vectors pointing from origin to 3D points
