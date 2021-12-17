@@ -60,7 +60,6 @@ T_WC_i(4, 4) = 1; % Make it a homogeneous transformation matrix
 % remove lost candidate point data / retain matched candidate point data
 F = F(validity, :);
 T = T(validity, :);
-C = C(validity, :); % Don't forget to remove these too!
 
 %% Triangulating New Landmarks
 alpha = 0.1; % Radians
