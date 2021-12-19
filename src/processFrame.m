@@ -68,6 +68,15 @@ alpha = 0.1; % Radians
 P = [P ; P_new];
 X = [X ; X_new];
 
+%% Find the features in the new image and update the state
+N = getHarrisFeatures(I_i);
+% Add the new points to the set of candidate points
+C = [C ; N];
+% Add the new points to the set of first saw points
+F = [F ; N];
+% Update the set for first observation for each candidate keypoint
+T = [T ; repmat(T_WC_i(:)', [size(N, 1), 1])];
+
 %% Store Local Variables in State of Current Frame
 S_i.P = P; % Set of keypoints in the ith (current) frame (K'x2)
 S_i.X = X; % Set of landmarks in the ith (current) frame (K'x3)

@@ -7,7 +7,7 @@ function [P_new, X_new] = getNewLandmarks(F, C, T_F, T_C, intrinsics, alpha)
 %     landmarks set.
 % Inputs: 
 %   F       = 2d image location of the first time a point was tracked (Nx2)
-%   C       = 2d image location of the current poition of a point (Nx2)
+%   C       = 2d image location of the current position of a point (Nx2)
 %   T_F     = Array of transformation matrices for the frame in which each point was first tracked (Nx16)
 %   T_C     = Transformation matrix for the current frame
 % Outputs: 
