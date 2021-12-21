@@ -2,7 +2,8 @@
 % Can be used to step through the processFrame function
 
 % get first images of dataset, as well as camera instrinsics
-[img1, img2, intrinsics] = getInitialFrames(0, 0, 2);
+SECOND = 2;
+[img1, img2, intrinsics] = getInitialFrames(0, 0, SECOND);
 
 [keyPoints, landmarks3D, R, T] = bootstrap(img1, img2, intrinsics);
 
@@ -14,8 +15,13 @@ S.C = [];
 S.F = [];
 S.T = [];
 
-% Reusing this because why not
-[img3, ~, ~] = getInitialFrames(0, 3, 0);
+i = SECOND + 1;
 
-
-[S, T] = processFrame(img3, img2, S, intrinsics);
+while true
+    img1 = img2;
+    [img2, ~, ~] = getInitialFrames(0, i, 0);
+%     imshow(img2);
+    [S, T] = processFrame(img1, img2, S, intrinsics);
+    T
+    i = i + 1
+end

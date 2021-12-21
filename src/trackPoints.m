@@ -18,7 +18,7 @@ function [points2, validity] = trackPoints(img1, img2, points1)
         return
     end
 
-    pointTracker = vision.PointTracker;
+    pointTracker = vision.PointTracker('MaxBidirectionalError', 2);
     initialize(pointTracker, points1, img1);
     [matchedPoints, validity] = pointTracker(img2);
 

@@ -1,4 +1,4 @@
-function [S_i,T_WC_i] = processFrame(I_i, I_j, S_j, intrinsics)
+function [S_2,T_WC_i] = processFrame(I_1, I_2, S_1, intrinsics)
 %processFrame Process incoming frames in the continous VO pipeline
 % Summary: 
 %   Takes as input the incoming (current) ith frame, the previous i-1th
@@ -17,31 +17,31 @@ function [S_i,T_WC_i] = processFrame(I_i, I_j, S_j, intrinsics)
 %   landmarks when possible. 
 
 % Inputs: 
-%   I_i         = Image of the ith (current) frame
-%   I_j         = Image of the i-1th (previous) frame
-%   S_j         = State of the i-1th (previous) frame
+%   I_2         = Image of the ith (current) frame
+%   I_1         = Image of the i-1th (previous) frame
+%   S_1         = State of the i-1th (previous) frame
 %   intrinsics  = cameraIntrinsics object
 
 % Outputs: 
-%   S_i       = State of the ith (current) frame
+%   S_2       = State of the ith (current) frame
 %   T_WC_i    = Pose of the ith (current) frame 
 
 %% Setup
-P = S_j.P; % Set of keypoints in the i-1th (previous) frame (Kx2)
-X = S_j.X; % Set of landmarks in the i-1th (previous) frame (Kx3)
-C = S_j.C; % Set of candidate keypoints in the i-1th (previous) frame (Mx2)
-F = S_j.F; % Set of first observation of each candidate keypoints in the i-1th (previous) frame (Mx2)
-T = S_j.T; % Set of camera poses for first observation of each candidate keypoints in the i-1th (previous) frame (Mx16)
+P = S_1.P; % Set of keypoints in the i-1th (previous) frame (Kx2)
+X = S_1.X; % Set of landmarks in the i-1th (previous) frame (Kx3)
+C = S_1.C; % Set of candidate keypoints in the i-1th (previous) frame (Mx2)
+F = S_1.F; % Set of first observation of each candidate keypoints in the i-1th (previous) frame (Mx2)
+T = S_1.T; % Set of camera poses for first observation of each candidate keypoints in the i-1th (previous) frame (Mx16)
 
 % K_j = size(P_j,2); % Number of keypoints in the i-1th (previous) frame
 % M_j = size(C_j,2); % Number of candidate keypoints in the i-1th (previous) frame
 
 % Initialize state of current frame
-S_i = struct;
+S_2 = struct;
 
 %% Associate Keypoints to Existing Landmarks
 % use KLT and RANSAC to track keypoints
-[P, validity] = trackPoints(I_j, I_i, P);
+[P, validity] = trackPoints(I_1, I_2, P);
 
 % Update landmark set by only keeping corresponding landmarks of reliably
 % tracked keypoints (RANSAC)
@@ -56,20 +56,30 @@ T_WC_i = [worldOrientation, worldLocation'];
 T_WC_i(4, 4) = 1; % Make it a homogeneous transformation matrix
 
 %% Track Candidate Keypoints
-[C, validity] = trackPoints(I_j, I_i, C);
+[C, validity] = trackPoints(I_1, I_2, C);
 % remove lost candidate point data / retain matched candidate point data
 F = F(validity, :);
 T = T(validity, :);
 
 %% Triangulating New Landmarks
 alpha = 0.1; % Radians
-[P_new, X_new] = getNewLandmarks(F, C, T, T_WC_i, intrinsics, alpha);
+[P_new, X_new, remove] = getNewLandmarks(F, C, T, T_WC_i, intrinsics, alpha);
+
+F(remove, :) = [];
+C(remove, :) = [];
+T(remove, :) = [];
 
 P = [P ; P_new];
 X = [X ; X_new];
 
 %% Find the features in the new image and update the state
-N = getHarrisFeatures(I_i);
+N = getHarrisFeatures(I_2);
+
+% Check if we have redected features that we are already tracking.
+tolerance = 0.01; % tolerance (fraction)
+inliers = ismembertol(N, [P; C], tolerance, "ByRows", true);
+N(inliers, :) = []; % Remove redetected features
+
 % Add the new points to the set of candidate points
 C = [C ; N];
 % Add the new points to the set of first saw points
@@ -78,11 +88,11 @@ F = [F ; N];
 T = [T ; repmat(T_WC_i(:)', [size(N, 1), 1])];
 
 %% Store Local Variables in State of Current Frame
-S_i.P = P; % Set of keypoints in the ith (current) frame (K'x2)
-S_i.X = X; % Set of landmarks in the ith (current) frame (K'x3)
-S_i.C = C; % Set of candidate keypoints in the ith (previous) frame (M'x2)
-S_i.F = F; % Set of first observation of each candidate keypoints in the ith (current) frame (M'x2)
-S_i.T = T; % Set of camera poses for first observation of each candidate keypoints in the ith (current) frame (M'x16)
+S_2.P = P; % Set of keypoints in the ith (current) frame (K'x2)
+S_2.X = X; % Set of landmarks in the ith (current) frame (K'x3)
+S_2.C = C; % Set of candidate keypoints in the ith (previous) frame (M'x2)
+S_2.F = F; % Set of first observation of each candidate keypoints in the ith (current) frame (M'x2)
+S_2.T = T; % Set of camera poses for first observation of each candidate keypoints in the ith (current) frame (M'x16)
 
 end
 

@@ -26,3 +26,20 @@ T(end, :) = [];
 
 
 [P_new, X_new] = getNewLandmarks(F, C, T, T_WC_i, intrinsics, alpha);
+
+
+%% Testing some parts of the function
+N = 45;
+
+a = 0:N;
+x = 1 - tan(a./180 * pi);
+P = [1;1;0] * ones(1,N + 1);
+O1 = [x ;zeros(1,N + 1); zeros(1, N + 1)];
+O2= [1;0;0] * ones(1,N + 1);
+
+V_F = P - O1;
+V_C = P - O2;
+
+% Angles should run from 0 to N
+angles = atan2(vecnorm(cross(V_F,V_C)), dot(V_F,V_C))'./ pi .* 180
+
