@@ -35,6 +35,12 @@ function [fig, topViewLandmarksX, topViewLandmarksY, topViewCarX, topViewCarY] =
     topViewLandmarksY = cell(1,numFrames);
     topViewCarX = cell(1,numFrames);
     topViewCarY = cell(1,numFrames);
+    % landmark data is given in singles
+    % coordinates of vehicle are given in doubles (default)
+    for i = 1:numFrames
+        topViewLandmarksX{i} = single([]);
+        topViewLandmarksY{i} = single([]);
+    end
     
     % Bottom left corner: number of keypoints tracked over the last numFrames frames
     fig.numLandmarksPlot = subplot(2,2,3);
