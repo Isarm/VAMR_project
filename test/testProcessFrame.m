@@ -27,7 +27,7 @@ while true
     img1 = img2;
     [img2, ~, ~] = getInitialFrames(0, i, 0);
 %     imshow(img2);
-    % I need to track S1 and S2 temporarily to find
+    % I need to track both S1 and S2 temporarily to find
     % the new 3D landmark points only
     [S2, T] = processFrame(img1, img2, S, intrinsics);
     T;
@@ -57,9 +57,8 @@ while true
         end
     end
 
-    updateFigure(fig, img2, P2(end-numNewKeypoints+1:end,:), row2,...
+    updateFigure(fig, img2, P2, row2,...
                 [T(1,4),T(3,4)], topViewLandmarksX, topViewLandmarksZ, ...
                 topViewCarX, topViewCarZ);
-
     S = S2;
 end
