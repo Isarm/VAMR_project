@@ -50,10 +50,15 @@ X = X(validity, :);
 %% Estimate the Current Pose
 % NOTE: estimateWorldCameraPose takes as input Nx2, Nx3 matrices
 % TODO: TEST THIS FUNCTION AND USE OF INTRINSICS
-[worldOrientation,worldLocation,~] = estimateWorldCameraPose(P, X, intrinsics);
-
+[worldOrientation,worldLocation,ransac_inlier_ids] = ...
+        estimateWorldCameraPose(P, X, intrinsics, ...
+        'MaxNumTrials', 3000, 'MaxReprojectionError', 3)
 T_WC_i = [worldOrientation, worldLocation'];
-T_WC_i(4, 4) = 1; % Make it a homogeneous transformation matrix
+T_WC_i(4, 4) = 1 % Make it a homogeneous transformation matrix
+
+% Delete points that are not inliers
+P = P(ransac_inlier_ids, :);
+X = X(ransac_inlier_ids, :);
 
 %% Track Candidate Keypoints
 [C, validity] = trackPoints(I_1, I_2, C);
