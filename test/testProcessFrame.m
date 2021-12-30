@@ -9,7 +9,7 @@ topViewLastCell = 1;
 
 % get first images of dataset, as well as camera instrinsics
 SECOND = 2;
-[img1, img2, intrinsics] = getInitialFrames(0, 0, SECOND);
+[img1, img2, intrinsics] = getInitialFrames(2, 0, SECOND);
 
 [keyPoints, landmarks3D, R, T] = bootstrap(img1, img2, intrinsics);
 
@@ -25,7 +25,7 @@ i = SECOND + 1;
 
 while true
     img1 = img2;
-    [img2, ~, ~] = getInitialFrames(0, i, 0);
+    [img2, ~, ~] = getInitialFrames(2, i, 0);
 %     imshow(img2);
     % I need to track both S1 and S2 temporarily to find
     % the new 3D landmark points only
@@ -61,4 +61,5 @@ while true
                 [T(1,4),T(3,4)], topViewLandmarksX, topViewLandmarksZ, ...
                 topViewCarX, topViewCarZ);
     S = S2;
+    pause(0.1)
 end

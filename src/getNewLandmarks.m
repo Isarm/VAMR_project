@@ -28,9 +28,11 @@ end
 % We need to invert the homogeneous transformation matrix, as we need the
 % matrix that describes the world points wrt the camera, while the current
 % matrices describe the camera frame wrt the world frame.
-R_C = T_C(1:3, 1:3)';
-P_C = -R_C * T_C(1:3, 4);
+T_C = inv(T_C);
+R_C = T_C(1:3, 1:3);
+P_C = T_C(1:3, 4);
 camMatrix_current = cameraMatrix(intrinsics, R_C, P_C);
+
 N = size(F, 1);
 landmarks3D = zeros(N, 3);
 valid = false(N, 1);
@@ -60,8 +62,8 @@ V_C = landmarks3D' - O_C;
 % Get the angle. From https://ch.mathworks.com/matlabcentral/answers/16243-angle-between-two-vectors-in-3d
 angles = atan2(vecnorm(cross(V_F,V_C)), dot(V_F,V_C))';
 
-%% Only keep entries if the angle is sufficiently large
-indices = abs(angles) > alpha & valid;
+%% Only keep entries if the angle is sufficiently large and the reprojection error is small enough
+indices = abs(angles) > alpha & valid & (repr < 1);
 
 P_new = C(indices, :);
 X_new = landmarks3D(indices, :);

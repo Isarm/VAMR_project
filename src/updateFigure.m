@@ -17,6 +17,7 @@ function [] = updateFigure(fig, img, imgPoints, numLandmarksPoint, fullTrajector
     % Top left corner: plot current frame and keypoints or whatever else we'd like
     imshow(img, 'Parent', fig.currentFramePlot);
     plot(fig.currentFramePlot, imgPoints(:,1), imgPoints(:,2), 'co');
+    
 
     % Top right corner: plot 3D landmarks and car position as seen from above in last numFrames frames
     % concatenate cells to get full X and Y sets    
@@ -30,6 +31,7 @@ function [] = updateFigure(fig, img, imgPoints, numLandmarksPoint, fullTrajector
     [x,y] = getpoints(fig.numLandmarksData);
     addpoints(fig.numLandmarksData, x-(max(x)+1), y);
     addpoints(fig.numLandmarksData, x(end)+1, numLandmarksPoint)
+
 
     % Bottom right corner: position of vehicle over time?
     addpoints(fig.fullTrajectoryData, fullTrajectoryPoints(:,1), fullTrajectoryPoints(:,2))
