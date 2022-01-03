@@ -52,7 +52,7 @@ X = X(validity, :);
 % TODO: TEST THIS FUNCTION AND USE OF INTRINSICS
 [worldOrientation,worldLocation,ransac_inlier_ids] = ...
         estimateWorldCameraPose(P, X, intrinsics, ...
-        'MaxNumTrials', 15000, 'MaxReprojectionError', 0.8)
+        'MaxNumTrials', 15000, 'MaxReprojectionError', 3)
 T_WC_i = [worldOrientation, worldLocation'];
 T_WC_i(4, 4) = 1 % Make it a homogeneous transformation matrix
 
@@ -67,7 +67,7 @@ F = F(validity, :);
 T = T(validity, :);
 
 %% Triangulating New Landmarks
-alpha = 0.03; % Radians
+alpha = 6 * pi / 180; % Radians
 [P_new, X_new, remove] = getNewLandmarks(F, C, T, T_WC_i, intrinsics, alpha);
 
 F(remove, :) = [];
@@ -81,7 +81,7 @@ X = [X ; X_new];
 N = getHarrisFeatures(I_2);
 
 % Check if we have redected features that we are already tracking.
-tolerance = 3; % tolerance pixel values
+tolerance = 1; % tolerance pixel values
 inliers = ismembertol(N, [P; C], tolerance, "ByRows", true, 'DataScale', [1 1]);
 N(inliers, :) = []; % Remove redetected features
 
