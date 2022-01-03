@@ -39,11 +39,33 @@ valid = false(N, 1);
 repr = zeros(N,1);
 
 % This will be kind of slow, so maybe optimize later
+K = intrinsics.IntrinsicMatrix';
 for i = 1:N
-    H = reshape(T_F(i, :), [4 4]);
-    H = inv(H); % Again invert 
-    camMatrix_previous = cameraMatrix(intrinsics, H(1:3, 1:3), H(1:3, 4));
-    [landmarks3D(i,:), repr(i), valid(i)] = triangulate(F(i,:), C(i,:), camMatrix_previous, camMatrix_current); 
+    T_FW_i = inv(reshape(T_F(i,:), [4 4]));
+
+    % THIS CODE IMPLEMENTS TRIANGULATE BY HAND (DOES NOT YIELD GOOD RESULTS)
+    % M_F = K * T_FW_i(1:3, :);
+    % M_C = K * T_C(1:3, :);
+    % % Compute landmark
+    % Q = [skew([F(i,:) 1]) * M_F;
+    %      skew([C(i,:) 1]) * M_C];
+    % [U, S, V] = svd(Q);
+    % landmarks3D(i,:) = V(1:3,end) ./ V(4,end);
+    % % Compute reprojection error
+    % p_repr = M_C * [landmarks3D(i,:) 1]';
+    % lambda_p = p_repr(end);
+    % p_repr = p_repr(1:2) / lambda_p;
+    % repr(i) = norm(p_repr' - C(i,:));
+    % % Compute validity
+    % valid(i) = lambda_p > 0;
+
+    % H = reshape(T_F(i, :), [4 4]);
+    % H = inv(H); % Again invert
+    % camMatrix_previous = cameraMatrix(intrinsics, H(1:3, 1:3)', H(1:3, 4));
+
+    camMatrix_current = (K * T_C(1:3,:))';
+    camMatrix_previous = (K * T_FW_i(1:3,:))';
+    [landmarks3D(i,:), repr(i), valid(i)] = triangulate(F(i,:), C(i,:), camMatrix_previous, camMatrix_current);
 end
 
 %% Figuring out angles
@@ -72,3 +94,6 @@ remove = indices;
 
 end
 
+function s = skew(v)
+        s = [0 -v(3) v(2) ; v(3) 0 -v(1) ; -v(2) v(1) 0 ];
+end

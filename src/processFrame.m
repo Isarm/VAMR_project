@@ -53,8 +53,9 @@ X = X(validity, :);
 [worldOrientation,worldLocation,ransac_inlier_ids] = ...
         estimateWorldCameraPose(P, X, intrinsics, ...
         'MaxNumTrials', 15000, 'MaxReprojectionError', 3)
+
 T_WC_i = [worldOrientation, worldLocation'];
-T_WC_i(4, 4) = 1 % Make it a homogeneous transformation matrix
+T_WC_i(4, 4) = 1; % Make it a homogeneous transformation matrix
 
 % Delete points that are not inliers
 P = P(ransac_inlier_ids, :);
@@ -78,7 +79,7 @@ P = [P ; P_new];
 X = [X ; X_new];
 
 %% Find the features in the new image and update the state
-N = getHarrisFeatures(I_2);
+N = getSIFTFeatures(I_2);
 
 % Check if we have redected features that we are already tracking.
 tolerance = 1; % tolerance pixel values
