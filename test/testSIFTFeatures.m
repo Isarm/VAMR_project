@@ -1,4 +1,4 @@
-%% testHARRISFeatures
+%% testSIFTFeatures
 
 %% Setup
 ds = 0; % 0: KITTI, 1: Malaga, 2: parking
@@ -26,7 +26,7 @@ else
     assert(false);
 end
 
-N = getHarrisFeatures(img0);
+N = getSIFTFeatures(img0);
 
 figure;
 imagesc(img0)
