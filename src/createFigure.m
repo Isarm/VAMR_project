@@ -18,15 +18,15 @@ function [fig, topViewLandmarksX, topViewLandmarksY, topViewCarX, topViewCarY] =
     fig = struct;
     fig.f = figure;
     fig.numFrames = numFrames;
+    set(gcf,'position',[220,377,1000,600])
 
     % Top left corner: plot current frame and keypoints or whatever else we'd like
-    fig.currentFramePlot = subplot(2,2,1);
-    title('Current Image')
+    fig.currentFramePlot = subplot(2,4,[1,2]);
+    title('Current Frame: No. 1')
     hold(fig.currentFramePlot, 'on')
 
     % Top right corner: plot 3D landmarks and car position as seen from above
-    fig.topViewPlot = subplot(2,2,2);
-    % TODO: get this title to show?
+    fig.topViewPlot = subplot(2,4,[3,4,7,8]);
     title(sprintf('Trajectory of last %d frames and landmarks', numFrames));
     axis equal;
     % each cell contains the values for a given frame
@@ -35,17 +35,25 @@ function [fig, topViewLandmarksX, topViewLandmarksY, topViewCarX, topViewCarY] =
     topViewLandmarksY = cell(1,numFrames);
     topViewCarX = cell(1,numFrames);
     topViewCarY = cell(1,numFrames);
+
+    % landmark data is given in singles
+    % coordinates of vehicle are given in doubles (default)
+    for i = 1:numFrames
+        topViewLandmarksX{i} = single([]);
+        topViewLandmarksY{i} = single([]);
+    end
     
     % Bottom left corner: number of keypoints tracked over the last numFrames frames
-    fig.numLandmarksPlot = subplot(2,2,3);
-    fig.numLandmarksData = animatedline('MaximumNumPoints',numPointsNumLandmarks);
+    % TODO: Make this figure more clear
+    fig.numLandmarksPlot = subplot(2,4,5);
+    fig.numLandmarksData = animatedline('MaximumNumPoints',numPointsNumLandmarks, 'Color', 'g', 'Marker', 'o');
     xlim([-numFrames, 0])
     title(sprintf('Number of landmarks tracked over last %d frames', numFrames));
     addpoints(fig.numLandmarksData, 0, 0)
     axis equal;
 
     % Bottom right corner: position of vehicle over time?
-    fig.fullTrajectoryPlot = subplot(2,2,4);
-    fig.fullTrajectoryData = animatedline;
+    fig.fullTrajectoryPlot = subplot(2,4,6);
+    fig.fullTrajectoryData = animatedline('Color', 'r', 'Marker', 'o');
     title('Full Trajectory')
 end

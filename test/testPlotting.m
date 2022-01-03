@@ -16,7 +16,8 @@ pointY = rand(1,numPoints);
 pointX2 = rand(1,numPoints);
 pointY2 = rand(1,numPoints);
 
-for i = 1:numel(x)
+%for i = 1:numel(x)
+for i = 1:100
     pause(0.01);
 
     % new camera frame
@@ -25,11 +26,12 @@ for i = 1:numel(x)
     % some modification of the image here...
 
     % annoying work we need to do because pass-by-value, this will be in the final script
-    topViewLandmarksX{topViewLastCell} = pointX(i);
-    topViewLandmarksY{topViewLastCell} = pointY(i);
+    % since actual data is a single
+    topViewLandmarksX{topViewLastCell} = single(pointX(i));
+    topViewLandmarksY{topViewLastCell} = single(pointY(i));
     topViewCarX{topViewLastCell} = pointX2(i);
     topViewCarY{topViewLastCell} = pointY2(i);
-    topViewLastCell = mod(topViewLastCell + 1, numFrames);
+    topViewLastCell = mod(topViewLastCell+1, numFrames+1);
     if topViewLastCell == 0
         topViewLastCell = 1;
     end

@@ -18,10 +18,11 @@ function [points2, validity] = trackPoints(img1, img2, points1)
         return
     end
 
-    pointTracker = vision.PointTracker;
+    pointTracker = vision.PointTracker('MaxBidirectionalError', 3, 'MaxIterations', 50, 'BlockSize', [21 21]);
     initialize(pointTracker, points1, img1);
     [matchedPoints, validity] = pointTracker(img2);
 
+    release(pointTracker)
     % refine using RANSAC (which is built into vision.PointTracker, since it returns the logical array validity)
     % only keeps valid rows
     points2 = matchedPoints(validity, :);

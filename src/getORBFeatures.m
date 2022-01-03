@@ -9,7 +9,7 @@ function [features,validPoints] = getORBFeatures(img)
 % - validPoints: feature locations in the image
 
     % detects corners using FAST
-    imgPoints = detectFASTFeatures(img);
+    imgPoints = detectHarrisFeatures(img);
     % extract ORB features, as well as valid points (subset that isn't too
     % close to the edges of the image)
     [features, validPoints] = extractFeatures(img, imgPoints);
