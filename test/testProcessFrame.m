@@ -1,5 +1,11 @@
+clc
+clear
+close all
+
 %% Tests processFrame
 % Can be used to step through the processFrame function
+ds = 2;
+parameters = getParameters(ds);
 
 numFrames = 20;
 % x and z since matlab uses x and y for the horizontal plane, and y for up
@@ -8,10 +14,9 @@ numFrames = 20;
 topViewLastCell = 1;
 
 % get first images of dataset, as well as camera instrinsics
-SECOND = 2;
-[img1, img2, intrinsics] = getInitialFrames(2, 0, SECOND);
+[img1, img2, intrinsics] = getInitialFrames(ds, parameters.bootstrapFrame1, parameters.bootstrapFrame2);
 
-[keyPoints, landmarks3D, R, T] = bootstrap(img1, img2, intrinsics);
+[keyPoints, landmarks3D, R, T] = bootstrap(img1, img2, intrinsics, parameters);
 
 S = struct;
 
@@ -21,15 +26,16 @@ S.C = [];
 S.F = [];
 S.T = [];
 
-i = SECOND + 1;
+i = parameters.bootstrapFrame2 + 1;
+
 
 while true
     img1 = img2;
-    [img2, ~, ~] = getInitialFrames(2, i, 0);
+    [img2, ~, ~] = getInitialFrames(ds, i, 0);
 %     imshow(img2);
     % I need to track both S1 and S2 temporarily to find
     % the new 3D landmark points only
-    [S2, T] = processFrame(img1, img2, S, intrinsics);
+    [S2, T] = processFrame(img1, img2, S, intrinsics, parameters);
     T;
     i = i + 1;
 

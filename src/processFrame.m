@@ -1,4 +1,4 @@
-function [S_2,T_WC_i] = processFrame(I_1, I_2, S_1, intrinsics)
+function [S_2,T_WC_i] = processFrame(I_1, I_2, S_1, intrinsics, parameters)
 %processFrame Process incoming frames in the continous VO pipeline
 % Summary: 
 %   Takes as input the incoming (current) ith frame, the previous i-1th
@@ -41,18 +41,18 @@ S_2 = struct;
 
 %% Associate Keypoints to Existing Landmarks
 % use KLT and RANSAC to track keypoints
-[P, validity] = trackPoints(I_1, I_2, P);
+[P, validity] = trackPoints(I_1, I_2, P, parameters);
 
 % Update landmark set by only keeping corresponding landmarks of reliably
 % tracked keypoints (RANSAC)
 X = X(validity, :);
 
 %% Estimate the Current Pose
-% NOTE: estimateWorldCameraPose takes as input Nx2, Nx3 matrices
-% TODO: TEST THIS FUNCTION AND USE OF INTRINSICS
 [worldOrientation,worldLocation,ransac_inlier_ids] = ...
         estimateWorldCameraPose(P, X, intrinsics, ...
-        'MaxNumTrials', 15000, 'MaxReprojectionError', 3)
+        'MaxNumTrials', parameters.MaxNumTrials, ...
+        'Confidence', parameters.Confidence, ...
+        'MaxReprojectionError', parameters.MaxReprojectionError);
 
 T_WC_i = [worldOrientation, worldLocation'];
 T_WC_i(4, 4) = 1; % Make it a homogeneous transformation matrix
@@ -62,14 +62,13 @@ P = P(ransac_inlier_ids, :);
 X = X(ransac_inlier_ids, :);
 
 %% Track Candidate Keypoints
-[C, validity] = trackPoints(I_1, I_2, C);
+[C, validity] = trackPoints(I_1, I_2, C, parameters);
 % remove lost candidate point data / retain matched candidate point data
 F = F(validity, :);
 T = T(validity, :);
 
 %% Triangulating New Landmarks
-alpha = 6 * pi / 180; % Radians
-[P_new, X_new, remove] = getNewLandmarks(F, C, T, T_WC_i, intrinsics, alpha);
+[P_new, X_new, remove] = getNewLandmarks(F, C, T, T_WC_i, intrinsics, parameters);
 
 F(remove, :) = [];
 C(remove, :) = [];
@@ -79,7 +78,9 @@ P = [P ; P_new];
 X = [X ; X_new];
 
 %% Find the features in the new image and update the state
-N = getSIFTFeatures(I_2);
+% N = getSIFTFeatures(I_2);
+[~,N] = getHarrisFeatures(I_2, parameters);
+N = N.Location;
 
 % Check if we have redected features that we are already tracking.
 tolerance = 1; % tolerance pixel values
