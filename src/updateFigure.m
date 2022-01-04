@@ -29,6 +29,24 @@ function [] = updateFigure(fig, img, frameNum, imgPoints, numLandmarksPoint, ful
     hold(fig.topViewPlot, 'off')
     legend(fig.topViewPlot, 'Trajectory', 'Landmarks');
 
+    medianY = median(cell2mat(topViewLandmarkPointsY));
+    rangeY = std(rmoutliers(cell2mat(topViewLandmarkPointsY)));
+    if isnan(medianY) || isnan(rangeY)
+        medianY = 0;
+        rangeY = 0;
+    end
+
+    ylim(fig.topViewPlot, [medianY - 2 * rangeY - 1, medianY + 2 * rangeY + 1]);
+
+    medianX = median(cell2mat(topViewLandmarkPointsX));
+    rangeX = std(rmoutliers(cell2mat(topViewLandmarkPointsX)));
+    if isnan(medianX) || isnan(rangeX)
+        medianX = 0;
+        rangeX = 0;
+    end
+
+    xlim(fig.topViewPlot, [medianX - 2 * rangeX - 1, medianX + 2 * rangeX + 1]);
+
     % Bottom left corner: number of keypoints tracked over the last numFrames frames
     % uber janky way of getting this to plot from -numFrames to 0
     % TODO: Update this figure
