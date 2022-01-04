@@ -23,9 +23,9 @@ function [] = updateFigure(fig, img, frameNum, imgPoints, numLandmarksPoint, ful
 
     % Top right corner: plot 3D landmarks and car position as seen from above in last numFrames frames
     % concatenate cells to get full X and Y sets    
-    plot(fig.topViewPlot, cell2mat(topViewCarPointsX), cell2mat(topViewCarPointsY), '-ro');
+    plot(fig.topViewPlot, topViewCarPointsX, topViewCarPointsY, '-ro');
     hold(fig.topViewPlot, 'on')
-    plot(fig.topViewPlot, cell2mat(topViewLandmarkPointsX), cell2mat(topViewLandmarkPointsY), 'ko');
+    plot(fig.topViewPlot, cell2mat(topViewLandmarkPointsX), cell2mat(topViewLandmarkPointsY), 'ko', 'MarkerSize', 2);
     hold(fig.topViewPlot, 'off')
     legend(fig.topViewPlot, 'Trajectory', 'Landmarks');
 
