@@ -9,8 +9,29 @@ if ds == 0
     % TODO
     parameters = 0;
 elseif ds == 1
-    % TODO
-    parameters = 0;
+    % Bootstrapping
+    parameters.bootstrapFrame1 = 1;
+    parameters.bootstrapFrame2 = 4;
+    
+    % Harris Features
+    parameters.MinQuality = 2e-5; % Bootstrapping
+    parameters.MinQualityC = 2e-8; % Continuous
+    parameters.FilterSize = 17;
+    parameters.tolerance = 1;
+
+   
+    % KLT
+    parameters.MaxBidirectionalError = 0.3;
+    parameters.MaxIterations = 50;
+    parameters.BlockSize = [31 31];
+    
+    % P3P
+    parameters.MaxNumTrials = 25000;
+    parameters.Confidence = 99.99; % Default = 99
+    parameters.MaxReprojectionError = 4;
+    
+    % Triangulation
+    parameters.alpha = 5 * pi / 180; % Radians
 elseif ds == 2
     % Bootstrapping
     parameters.bootstrapFrame1 = 0;
@@ -20,6 +41,8 @@ elseif ds == 2
     parameters.MinQuality = 2e-5; % Bootstrapping
     parameters.MinQualityC = 1e-4; % Continuous
     parameters.FilterSize = 9;
+    parameters.tolerance = 1;
+
     
     % KLT
     parameters.MaxBidirectionalError = 3;

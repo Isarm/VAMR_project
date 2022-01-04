@@ -83,7 +83,7 @@ X = [X ; X_new];
 N = N.Location;
 
 % Check if we have redected features that we are already tracking.
-tolerance = 1; % tolerance pixel values
+tolerance = parameters.tolerance; % tolerance pixel values
 inliers = ismembertol(N, [P; C], tolerance, "ByRows", true, 'DataScale', [1 1]);
 N(inliers, :) = []; % Remove redetected features
 
