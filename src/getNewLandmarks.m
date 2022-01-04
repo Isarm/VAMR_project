@@ -40,32 +40,24 @@ repr = zeros(N,1);
 
 % This will be kind of slow, so maybe optimize later
 K = intrinsics.IntrinsicMatrix';
-for i = 1:N
-    T_FW_i = inv(reshape(T_F(i,:), [4 4]));
-
-    % THIS CODE IMPLEMENTS TRIANGULATE BY HAND (DOES NOT YIELD GOOD RESULTS)
-    % M_F = K * T_FW_i(1:3, :);
-    % M_C = K * T_C(1:3, :);
-    % % Compute landmark
-    % Q = [skew([F(i,:) 1]) * M_F;
-    %      skew([C(i,:) 1]) * M_C];
-    % [U, S, V] = svd(Q);
-    % landmarks3D(i,:) = V(1:3,end) ./ V(4,end);
-    % % Compute reprojection error
-    % p_repr = M_C * [landmarks3D(i,:) 1]';
-    % lambda_p = p_repr(end);
-    % p_repr = p_repr(1:2) / lambda_p;
-    % repr(i) = norm(p_repr' - C(i,:));
-    % % Compute validity
-    % valid(i) = lambda_p > 0;
-
-    % H = reshape(T_F(i, :), [4 4]);
-    % H = inv(H); % Again invert
-    % camMatrix_previous = cameraMatrix(intrinsics, H(1:3, 1:3)', H(1:3, 4));
-
-    camMatrix_current = (K * T_C(1:3,:))';
+% Get the camera matrix for the current camera pose
+camMatrix_current = (K * T_C(1:3,:))';
+% Get all unique rows in T_F
+[T_F_uniq, IA, IC] = unique(T_F, 'rows');
+% For each unique row 
+for i = 1:size(T_F_uniq, 1)
+    % Get the indices where it appears
+    ids = (i == IC);
+    % Get the camera transformation
+    T_FW_i = inv(reshape(T_F_uniq(i,:), [4 4]));
     camMatrix_previous = (K * T_FW_i(1:3,:))';
-    [landmarks3D(i,:), repr(i), valid(i)] = triangulate(F(i,:), C(i,:), camMatrix_previous, camMatrix_current);
+    % Triangualate points
+    [landmarks_i, repr_i, valid_i] = triangulate(F(ids,:), C(ids,:), ...
+            camMatrix_previous, camMatrix_current);
+    % Save values to corresponding positions
+    landmarks3D_test(ids, :) = landmarks_i;
+    repr(ids) = repr_i;
+    valid(ids) = valid_i;
 end
 
 %% Figuring out angles
@@ -92,8 +84,4 @@ X_new = landmarks3D(indices, :);
 
 remove = indices;
 
-end
-
-function s = skew(v)
-        s = [0 -v(3) v(2) ; v(3) 0 -v(1) ; -v(2) v(1) 0 ];
 end
