@@ -52,12 +52,8 @@ for i = 1:size(T_F_uniq, 1)
     T_FW_i = inv(reshape(T_F_uniq(i,:), [4 4]));
     camMatrix_previous = (K * T_FW_i(1:3,:))';
     % Triangualate points
-    [landmarks_i, repr_i, valid_i] = triangulate(F(ids,:), C(ids,:), ...
+    [landmarks3D(ids,:), repr(ids), valid(ids)] = triangulate(F(ids,:), C(ids,:), ...
             camMatrix_previous, camMatrix_current);
-    % Save values to corresponding positions
-    landmarks3D_test(ids, :) = landmarks_i;
-    repr(ids) = repr_i;
-    valid(ids) = valid_i;
 end
 
 %% Figuring out angles
