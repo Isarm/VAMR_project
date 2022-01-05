@@ -78,11 +78,9 @@ P = [P ; P_new];
 X = [X ; X_new];
 
 %% Find the features in the new image and update the state
-% N = getSIFTFeatures(I_2);
 [~,N] = getHarrisFeatures(I_2, parameters);
-N = N.Location;
 
-% Check if we have redected features that we are already tracking.
+% Check if we have redetected features that we are already tracking.
 tolerance = parameters.tolerance; % tolerance pixel values
 inliers = ismembertol(N, [P; C], tolerance, "ByRows", true, 'DataScale', [1 1]);
 N(inliers, :) = []; % Remove redetected features

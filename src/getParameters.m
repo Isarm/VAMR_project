@@ -6,8 +6,30 @@ function parameters = getParameters(ds)
 % 0: KITTI, 1: Malaga, 2: parking
 
 if ds == 0
-    % TODO
-    parameters = 0;
+    % Bootstrapping
+    parameters.bootstrapFrame1 = 1;
+    parameters.bootstrapFrame2 = 10;
+    
+    % Harris Features
+    parameters.MinQuality = 1e-4; % Bootstrapping
+    parameters.MinQualityC = 1e-4; % Continuous
+    parameters.FilterSize = 3;
+    parameters.tolerance = 1;
+    parameters.HarrisMaxFeatures = 300;
+    parameters.HarrisMaxSuppression = 15;
+   
+    % KLT
+    parameters.MaxBidirectionalError = 0.5;
+    parameters.MaxIterations = 2000;
+    parameters.BlockSize = [31 31];
+    
+    % P3P
+    parameters.MaxNumTrials = 25000;
+    parameters.Confidence = 99.99; % Default = 99
+    parameters.MaxReprojectionError = 4;
+    
+    % Triangulation
+    parameters.alpha = 5 * pi / 180; % Radians
 elseif ds == 1
     % Bootstrapping
     parameters.bootstrapFrame1 = 1;
@@ -18,7 +40,8 @@ elseif ds == 1
     parameters.MinQualityC = 2e-8; % Continuous
     parameters.FilterSize = 17;
     parameters.tolerance = 1;
-
+    parameters.HarrisMaxFeatures = 200;
+    parameters.HarrisMaxSuppression = 15;
    
     % KLT
     parameters.MaxBidirectionalError = 0.3;
@@ -42,7 +65,8 @@ elseif ds == 2
     parameters.MinQualityC = 1e-4; % Continuous
     parameters.FilterSize = 9;
     parameters.tolerance = 1;
-
+    parameters.HarrisMaxFeatures = 200;
+    parameters.HarrisMaxSuppression = 15;
     
     % KLT
     parameters.MaxBidirectionalError = 3;

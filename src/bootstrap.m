@@ -12,18 +12,18 @@ function [keyPoints, landmarks3D, R, T] = bootstrap(img0, img1, intrinsics, para
 matchIndices = matchFeatures(img0Features, img1Features);
 
 % Save only matched points
-img0ValidPoints = img0ValidPoints(matchIndices(:,1));
-img1ValidPoints = img1ValidPoints(matchIndices(:,2));
+img0ValidPoints = img0ValidPoints(matchIndices(:,1),:);
+img1ValidPoints = img1ValidPoints(matchIndices(:,2),:);
 
 % Estimate essential matrix
 [E, inliersIndex, status] = estimateEssentialMatrix(img0ValidPoints, img1ValidPoints, intrinsics);
 
 % Save inliers only
-img0ValidPoints = img0ValidPoints(inliersIndex);
-img1ValidPoints = img1ValidPoints(inliersIndex);
+img0ValidPoints = img0ValidPoints(inliersIndex,:);
+img1ValidPoints = img1ValidPoints(inliersIndex,:);
 
 % get location of valid points in second image
-keyPoints = img1ValidPoints.Location;
+keyPoints = img1ValidPoints;
 
 if status ~= 0
     disp("Error with estimating essential matrix during initialization")
