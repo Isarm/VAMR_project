@@ -52,8 +52,8 @@ while true
     numNewLandmarks = row2 - row1;
 
     % TODO: FIX THIS CUS THIS DOES NOT MAKE SENSE
-    topViewLandmarksX{topViewLastCell} = X2(:,1)';
-    topViewLandmarksZ{topViewLastCell} = X2(:,3)';
+    topViewLandmarksX{topViewLastCell} = single(X2(:,1)');
+    topViewLandmarksZ{topViewLastCell} = single(X2(:,3)');
     topViewCarX(i) = T(1,4); % x
     topViewCarZ(i) = T(3,4); % z
     topViewLastCell = mod(topViewLastCell + 1, numFrames+1);
