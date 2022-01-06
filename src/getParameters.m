@@ -8,7 +8,7 @@ function parameters = getParameters(ds)
 if ds == 0
     % Bootstrapping
     parameters.bootstrapFrame1 = 1;
-    parameters.bootstrapFrame2 = 10;
+    parameters.bootstrapFrame2 = 3;
     
     % Harris Features
     parameters.MinQuality = 1e-4; % Bootstrapping
@@ -19,7 +19,8 @@ if ds == 0
     parameters.HarrisMaxSuppression = 15;
    
     % KLT
-    parameters.MaxBidirectionalError = 0.5;
+    parameters.NumPyramidLevels = 5;
+    parameters.MaxBidirectionalError = 0.3;
     parameters.MaxIterations = 2000;
     parameters.BlockSize = [31 31];
     
@@ -44,6 +45,7 @@ elseif ds == 1
     parameters.HarrisMaxSuppression = 15;
    
     % KLT
+    parameters.NumPyramidLevels = 3;
     parameters.MaxBidirectionalError = 0.3;
     parameters.MaxIterations = 50;
     parameters.BlockSize = [31 31];
@@ -69,6 +71,7 @@ elseif ds == 2
     parameters.HarrisMaxSuppression = 15;
     
     % KLT
+    parameters.NumPyramidLevels = 3;
     parameters.MaxBidirectionalError = 3;
     parameters.MaxIterations = 50;
     parameters.BlockSize = [21 21];
