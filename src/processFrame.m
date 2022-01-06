@@ -82,7 +82,8 @@ X = [X ; X_new];
 
 % Check if we have redetected features that we are already tracking.
 tolerance = parameters.tolerance; % tolerance pixel values
-inliers = ismembertol(N, [P; C], tolerance, "ByRows", true, 'DataScale', [1 1]);
+% TODO: find optimal tol
+inliers = ismembertol(N, [P; C], tolerance, "ByRows", true, 'DataScale', [3 3]);
 N(inliers, :) = []; % Remove redetected features
 
 % Add the new points to the set of candidate points
