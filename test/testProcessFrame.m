@@ -12,7 +12,6 @@ numFrames = 20;
 % and down
 [fig, topViewLandmarksX, topViewLandmarksZ, topViewCarX, topViewCarZ] = createFigure(50, numFrames);
 topViewLastCell = 1;
-fig2 = figure;
 
 % get first images of dataset, as well as camera instrinsics
 [img1, img2, intrinsics] = getInitialFrames(ds, parameters.bootstrapFrame1, parameters.bootstrapFrame2);
@@ -62,15 +61,10 @@ while true
         topViewLastCell = 1;
     end
 
-
-    updateFigure(fig, img2, i, P2, row2,...
+    updateFigure(fig, img2, i, P2, S2.C, row2,...
                 [T(1,4),T(3,4)], topViewLandmarksX, topViewLandmarksZ, ...
                 topViewCarX, topViewCarZ);
 
-    figure(fig2)
-    imshow(img2);
-    hold on;
-    scatter(S2.C(:,1), S2.C(:,2), 'r');
     S = S2;
     pause(0.1)
 end
