@@ -7,8 +7,8 @@ function parameters = getParameters(ds)
 
 if ds == 0
     % Bootstrapping
-    parameters.bootstrapFrame1 = 1;
-    parameters.bootstrapFrame2 = 3;
+    parameters.bootstrapFrame1 = 98;
+    parameters.bootstrapFrame2 = 100;
     
     % Harris Features
     parameters.MinQuality = 1e-4; % Bootstrapping
@@ -19,8 +19,8 @@ if ds == 0
     parameters.HarrisMaxSuppression = 15;
    
     % KLT
-    parameters.NumPyramidLevels = 5;
-    parameters.MaxBidirectionalError = 0.3;
+    parameters.NumPyramidLevels = 3;
+    parameters.MaxBidirectionalError = 1;
     parameters.MaxIterations = 2000;
     parameters.BlockSize = [31 31];
     
@@ -30,7 +30,9 @@ if ds == 0
     parameters.MaxReprojectionError = 4;
     
     % Triangulation
-    parameters.alpha = 5 * pi / 180; % Radians
+    parameters.alpha = 4 * pi / 180; % Radians
+    parameters.MaxReprojectionErrorTriangulate = 8;
+
 elseif ds == 1
     % Bootstrapping
     parameters.bootstrapFrame1 = 1;
@@ -43,6 +45,7 @@ elseif ds == 1
     parameters.tolerance = 1;
     parameters.HarrisMaxFeatures = 200;
     parameters.HarrisMaxSuppression = 15;
+
    
     % KLT
     parameters.NumPyramidLevels = 3;
@@ -57,6 +60,8 @@ elseif ds == 1
     
     % Triangulation
     parameters.alpha = 5 * pi / 180; % Radians
+    parameters.MaxReprojectionErrorTriangulate = 3;
+
 elseif ds == 2
     % Bootstrapping
     parameters.bootstrapFrame1 = 0;
@@ -69,7 +74,7 @@ elseif ds == 2
     parameters.tolerance = 1;
     parameters.HarrisMaxFeatures = 200;
     parameters.HarrisMaxSuppression = 15;
-    
+
     % KLT
     parameters.NumPyramidLevels = 3;
     parameters.MaxBidirectionalError = 3;
@@ -83,6 +88,8 @@ elseif ds == 2
     
     % Triangulation
     parameters.alpha = 6 * pi / 180; % Radians
+    parameters.MaxReprojectionErrorTriangulate = 3;
+
 end
 end
 

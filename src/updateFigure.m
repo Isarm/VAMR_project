@@ -38,7 +38,7 @@ function [] = updateFigure(fig, img, frameNum, imgPoints, candidatePoints, numLa
         rangeY = 0;
     end
 
-    ylim(fig.topViewPlot, [medianY - 2 * rangeY - 1, medianY + 2 * rangeY + 1]);
+%     ylim(fig.topViewPlot, [medianY - 2 * rangeY - 1, medianY + 2 * rangeY + 1]);
 
     medianX = median(cell2mat(topViewLandmarkPointsX));
     rangeX = std(rmoutliers(cell2mat(topViewLandmarkPointsX)));
@@ -47,7 +47,7 @@ function [] = updateFigure(fig, img, frameNum, imgPoints, candidatePoints, numLa
         rangeX = 0;
     end
 
-    xlim(fig.topViewPlot, [medianX - 2 * rangeX - 1, medianX + 2 * rangeX + 1]);
+%     xlim(fig.topViewPlot, [medianX - 2 * rangeX - 1, medianX + 2 * rangeX + 1]);
 
     % Bottom left corner: number of keypoints tracked over the last numFrames frames
     % uber janky way of getting this to plot from -numFrames to 0

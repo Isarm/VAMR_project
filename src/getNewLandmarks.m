@@ -73,7 +73,7 @@ V_C = landmarks3D' - O_C;
 angles = atan2(vecnorm(cross(V_F,V_C)), dot(V_F,V_C))';
 
 %% Only keep entries if the angle is sufficiently large and the reprojection error is small enough
-indices = abs(angles) > parameters.alpha & valid & (repr < 1);
+indices = (abs(angles) > parameters.alpha) & valid & (repr < parameters.MaxReprojectionErrorTriangulate);
 
 P_new = C(indices, :);
 X_new = landmarks3D(indices, :);
