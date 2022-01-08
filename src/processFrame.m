@@ -54,7 +54,7 @@ X = X(validity, :);
         'Confidence', parameters.Confidence, ...
         'MaxReprojectionError', parameters.MaxReprojectionError);
 
-T_WC_i = [worldOrientation, worldLocation'];
+T_WC_i = [worldOrientation', worldLocation'];
 T_WC_i(4, 4) = 1 % Make it a homogeneous transformation matrix
 
 [R,t] = cameraPoseToExtrinsics(worldOrientation,worldLocation);
