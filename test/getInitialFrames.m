@@ -15,6 +15,8 @@ function [img0, img1, intrinsics] = getInitialFrames(dataset, frame1, frame2)
     kitti_path = "data/kitti05/kitti";
     malaga_path = "data/malaga-urban-dataset-extract-07";
     parking_path = "data/parking";
+    custom_path = "data/custom";
+    custom_high_fov_path = "data/custom_high_fov";
 
     if ds == 0
         % need to set kitti_path to folder containing "05" and "poses"
@@ -43,6 +45,18 @@ function [img0, img1, intrinsics] = getInitialFrames(dataset, frame1, frame2)
         
         ground_truth = load(strcat(parking_path, '/poses.txt'));
         ground_truth = ground_truth(:, [end-8 end]);
+    elseif ds == 3
+        % Path containing images, depths and all...
+        assert(exist('custom_path', 'var') ~= 0);
+        last_frame = 598;
+        cameraParams = load(strcat(custom_path, '/calibration/cameraParams.mat'));
+        K = cameraParams.cameraParams.IntrinsicMatrix';
+    elseif ds == 4
+        % Path containing images, depths and all...
+        assert(exist('custom_high_fov_path', 'var') ~= 0);
+        last_frame = 404;
+        cameraParams = load(strcat(custom_high_fov_path, '/calibration/cameraParams.mat'));
+        K = cameraParams.cameraParams.IntrinsicMatrix';
     else
         assert(false);
     end
@@ -67,6 +81,16 @@ function [img0, img1, intrinsics] = getInitialFrames(dataset, frame1, frame2)
             sprintf('/images/img_%05d.png',bootstrap_frames(1)))));
         img1 = rgb2gray(imread(strcat(parking_path, ...
             sprintf('/images/img_%05d.png',bootstrap_frames(2)))));
+    elseif ds == 3
+        img0 = rgb2gray(imread(strcat(custom_path, ...
+            sprintf('/images/img_%05d.jpg',bootstrap_frames(1)))));
+        img1 = rgb2gray(imread(strcat(custom_path, ...
+            sprintf('/images/img_%05d.jpg',bootstrap_frames(2)))));
+    elseif ds == 4
+        img0 = rgb2gray(imread(strcat(custom_high_fov_path, ...
+            sprintf('/images/img_%05d.jpg',bootstrap_frames(1)))));
+        img1 = rgb2gray(imread(strcat(custom_high_fov_path, ...
+            sprintf('/images/img_%05d.jpg',bootstrap_frames(2)))));
     else
         assert(false);
     end
