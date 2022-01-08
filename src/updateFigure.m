@@ -36,7 +36,6 @@ function [] = updateFigure(fig, img, frameNum, imgPoints, numLandmarksPoint, ful
     addpoints(fig.numLandmarksData, x-(max(x)+1), y);
     addpoints(fig.numLandmarksData, x(end)+1, numLandmarksPoint)
 
-
     % Bottom right corner: position of vehicle over time?
     addpoints(fig.fullTrajectoryData, fullTrajectoryPoints(:,1), fullTrajectoryPoints(:,2))
 

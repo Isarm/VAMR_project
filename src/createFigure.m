@@ -35,6 +35,7 @@ function [fig, topViewLandmarksX, topViewLandmarksY, topViewCarX, topViewCarY] =
     topViewLandmarksY = cell(1,numFrames);
     topViewCarX = cell(1,numFrames);
     topViewCarY = cell(1,numFrames);
+
     % landmark data is given in singles
     % coordinates of vehicle are given in doubles (default)
     for i = 1:numFrames
