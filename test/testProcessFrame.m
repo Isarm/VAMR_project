@@ -29,6 +29,33 @@ topViewLastCell = 1;
 
 [keyPoints, landmarks3D, R, T] = bootstrap(img1, img2, intrinsics, parameters);
 
+% Bundle Adjustment
+ba = struct;
+ba.vSet = imageviewset;
+ba.window = 5; % Set to 0 to turn off bundle adjustment
+ba.cameraPoses.ViewId = [];
+ba.cameraPoses.Orientation = {};
+ba.cameraPoses.Location = {};
+ba.xyzPoints = {}; % Organized by frame
+
+ba.xyzRefinedPoints = [];
+ba.refinedPoses = []; 
+ba.reprojectionErrors = [];
+
+if ba.window
+     % Note: FREAK used because extractFeatures cornerPoint objects
+     % default uses FREAK method
+     [F,~] = extractFeatures(img2, keyPoints, 'Method', 'FREAK');
+     ba.vSet = addView(ba.vSet,uint32(parameters.bootstrapFrame2),'Features',F,'Points', keyPoints);
+     ba.xyzPoints = [ba.xyzPoints; landmarks3D];
+     % TODO: When parameters.bootstrapFrame2 is not equal to 1
+     ba.cameraPoses.ViewId = [ba.cameraPoses.ViewId; uint32(parameters.bootstrapFrame2)];
+     ba.cameraPoses.Orientation = [ba.cameraPoses.Orientation; R']; % TODO?
+     ba.cameraPoses.Location = [ba.cameraPoses.Location; -T * R']; % TODO?
+
+    % ba.xyzPoints{1} = landmarks3D; % TODO: Do I need this?
+end
+
 S = struct;
 
 S.P = keyPoints;
@@ -45,7 +72,7 @@ while true
 %     imshow(img2);
     % I need to track both S1 and S2 temporarily to find
     % the new 3D landmark points only
-    [S2, T] = processFrame(img1, img2, S, intrinsics, parameters);
+    [S2, T, ba] = processFrame(img1, img2, S, intrinsics, parameters, ba, i);
     T;
     i = i + 1;
     
@@ -74,7 +101,7 @@ while true
 
     updateFigure(fig, img2, i, P2, row2,...
                 [T(1,4),T(3,4)], topViewLandmarksX, topViewLandmarksZ, ...
-                topViewCarX, topViewCarZ, groundTruthPose);
+                topViewCarX, topViewCarZ, ba, groundTruthPose);
     S = S2;
     
     pause(0.1)

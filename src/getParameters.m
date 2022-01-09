@@ -10,16 +10,15 @@ if ds == 0
     parameters = 0;
 elseif ds == 1
     % Bootstrapping
-    parameters.bootstrapFrame1 = 1;
-    parameters.bootstrapFrame2 = 4;
+    parameters.bootstrapFrame1 = 0; % 1
+    parameters.bootstrapFrame2 = 1; % 4
     
     % Harris Features
-    parameters.MinQuality = 2e-5; % Bootstrapping
+    parameters.MinQuality = 2e-3; % Bootstrapping
     parameters.MinQualityC = 2e-8; % Continuous
     parameters.FilterSize = 17;
     parameters.tolerance = 1;
 
-   
     % KLT
     parameters.MaxBidirectionalError = 0.3;
     parameters.MaxIterations = 50;
@@ -27,7 +26,7 @@ elseif ds == 1
     
     % P3P
     parameters.MaxNumTrials = 25000;
-    parameters.Confidence = 99.99; % Default = 99
+    parameters.Confidence = 99; % Default = 99
     parameters.MaxReprojectionError = 4;
     
     % Triangulation

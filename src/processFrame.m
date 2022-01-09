@@ -1,4 +1,4 @@
-function [S_2,T_WC_i] = processFrame(I_1, I_2, S_1, intrinsics, parameters)
+function [S_2,T_WC_i, ba] = processFrame(I_1, I_2, S_1, intrinsics, parameters, ba, i)
 %processFrame Process incoming frames in the continous VO pipeline
 % Summary: 
 %   Takes as input the incoming (current) ith frame, the previous i-1th
@@ -62,10 +62,10 @@ P = P(ransac_inlier_ids, :);
 X = X(ransac_inlier_ids, :);
 
 %% Track Candidate Keypoints
-[C, validity] = trackPoints(I_1, I_2, C, parameters);
+[C, validityCandidate] = trackPoints(I_1, I_2, C, parameters);
 % remove lost candidate point data / retain matched candidate point data
-F = F(validity, :);
-T = T(validity, :);
+F = F(validityCandidate, :);
+T = T(validityCandidate, :);
 
 %% Triangulating New Landmarks
 [P_new, X_new, remove] = getNewLandmarks(F, C, T, T_WC_i, intrinsics, parameters);
@@ -76,6 +76,12 @@ T(remove, :) = [];
 
 P = [P ; P_new];
 X = [X ; X_new];
+
+%% Bundle Adjustment
+if ba.window
+    ba = doBundleAdjustment(ba, i, I_2, intrinsics, T_WC_i, ...
+        P, X, validity, ransac_inlier_ids);
+end
 
 %% Find the features in the new image and update the state
 % N = getSIFTFeatures(I_2);

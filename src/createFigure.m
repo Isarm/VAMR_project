@@ -62,5 +62,9 @@ function [fig, topViewLandmarksX, topViewLandmarksY, topViewCarX, topViewCarZ] =
         fig.groundTruthData = animatedline('Color', 'k', 'Marker', 'o');
     end
     
+    
+    fig.fullTrajectoryDataBA = animatedline('Color', 'g', 'Marker', 'o');
+    
+    
     title('Full Trajectory')
 end

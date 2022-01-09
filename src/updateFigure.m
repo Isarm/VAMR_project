@@ -1,4 +1,4 @@
-function [] = updateFigure(fig, img, frameNum, imgPoints, numLandmarksPoint, fullTrajectoryPoints, topViewLandmarkPointsX, topViewLandmarkPointsY, topViewCarPointsX, topViewCarPointsY, groundTruth)
+function [] = updateFigure(fig, img, frameNum, imgPoints, numLandmarksPoint, fullTrajectoryPoints, topViewLandmarkPointsX, topViewLandmarkPointsY, topViewCarPointsX, topViewCarPointsY, ba, groundTruth)
     % UPDATEFIGURE
     % updates plots with data from newest frame
 
@@ -60,6 +60,11 @@ function [] = updateFigure(fig, img, frameNum, imgPoints, numLandmarksPoint, ful
     if ~isempty(groundTruth)
         addpoints(fig.groundTruthData, groundTruth(frameNum, 1), groundTruth(frameNum, 3));
 %         legend('Calculated Trajectory', 'Ground Truth Trajectory)');
+    end
+    
+    if ~isempty(ba.refinedPoses)
+        pose = ba.refinedPoses.Location{end};
+        addpoints(fig.fullTrajectoryDataBA , pose(1), pose(3));
     end
     
     drawnow
