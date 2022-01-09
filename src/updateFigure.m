@@ -1,4 +1,4 @@
-function [] = updateFigure(fig, img, frameNum, imgPoints, numLandmarksPoint, fullTrajectoryPoints, topViewLandmarkPointsX, topViewLandmarkPointsY, topViewCarPointsX, topViewCarPointsY, groundTruth)
+function [] = updateFigure(fig, img, frameNum, imgPoints, candidatePoints, numLandmarksPoint, fullTrajectoryPoints, topViewLandmarkPointsX, topViewLandmarkPointsY, topViewCarPointsX, topViewCarPointsY, groundTruth)
     % UPDATEFIGURE
     % updates plots with data from newest frame
 
@@ -18,7 +18,9 @@ function [] = updateFigure(fig, img, frameNum, imgPoints, numLandmarksPoint, ful
     % Top left corner: plot current frame and keypoints or whatever else we'd like
     % TODO: Center this image?
     imshow(img, 'Parent', fig.currentFramePlot);
-    plot(fig.currentFramePlot, imgPoints(:,1), imgPoints(:,2), 'co');
+    plot(fig.currentFramePlot, candidatePoints(:,1), candidatePoints(:,2), 'ro')
+    hold on
+    plot(fig.currentFramePlot, imgPoints(:,1), imgPoints(:,2), 'go');
     title(sprintf('Current Frame: No. %d', frameNum), 'Parent', fig.currentFramePlot);
 
     % Top right corner: plot 3D landmarks and car position as seen from above in last numFrames frames

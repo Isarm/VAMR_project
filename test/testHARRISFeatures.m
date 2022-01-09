@@ -26,9 +26,17 @@ else
     assert(false);
 end
 
-N = getHarrisFeatures(img0);
+params = getParameters(0);
 
 figure;
-imagesc(img0)
-hold on
-scatter(N(:,1), N(:,2), 'r')
+i = 1;
+while true
+        [img0, ~, ~] = getInitialFrames(ds, i, 1);
+        [~, N] = getHarrisFeatures(img0, params);
+        imshow(img0)
+        hold on
+        scatter(N(:,1), N(:,2), 'r')
+        hold off
+        i = i+1;
+        drawnow
+end
