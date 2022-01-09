@@ -58,24 +58,19 @@ function [ba] = doBundleAdjustment(ba, i, img, intrinsics, T_WC_i, P, X, validit
             'MaxIterations', 500);
                 
         difference = ba.refinedPoses.Location{end}-(ba.cameraPoseWC_i.Location{end-2} + ba.cameraPoses.Location{end-1});
-        norm(difference([1,3]))
+        norm(difference([1,3]));
         
-        if norm(difference([1,3])) > 0
-            % Store New Points
-            xyzPointsAll_ = cell2mat(ba.xyzPoints);
-            [xyzPointsAll, ia__, ~] = unique(xyzPointsAll_, 'stable', 'Rows');
-            [~, index]=ismember(xyzPoints,xyzPointsAll,'rows');
-            xyzPointsAll(index,:) = xyzRefinedPoints;
-            xyzPointsAll_(ia__,:) = xyzPointsAll;
-            ba.xyzPointsRefined = mat2cell(xyzPointsAll_, ba.sizexyzPoints, 3);
+        % Store New Points
+        xyzPointsAll_ = cell2mat(ba.xyzPoints);
+        [xyzPointsAll, ia__, ~] = unique(xyzPointsAll_, 'stable', 'Rows');
+        [~, index]=ismember(xyzPoints,xyzPointsAll,'rows');
+        xyzPointsAll(index,:) = xyzRefinedPoints;
+        xyzPointsAll_(ia__,:) = xyzPointsAll;
+        ba.xyzPointsRefined = mat2cell(xyzPointsAll_, ba.sizexyzPoints, 3);
 
-            % Store New Poses
-            ba.cameraPoses.Orientation = ba.refinedPoses.Orientation;
-            ba.cameraPoses.Location = ba.refinedPoses.Location;
-        else
-            ba.xyzPointsRefined = ba.xyzPoints;
-            disp('help');
-        end
+        % Store New Poses
+        ba.cameraPoses.Orientation = ba.refinedPoses.Orientation;
+        ba.cameraPoses.Location = ba.refinedPoses.Location;
         
         % Throw away points outside the window
         ba.xyzPoints = ba.xyzPoints(2:end);
@@ -91,8 +86,8 @@ end
 
 function newMatches = updateMatches(matches,validity)
     if length(matches) ~= length(validity)
-    print('error')
-    return;
+        print('error')
+        return;
     end
 
     % Build Match Matrix based on Validity
