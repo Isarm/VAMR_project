@@ -1,4 +1,4 @@
-function [] = updateFigure(fig, img, frameNum, imgPoints, numLandmarksPoint, fullTrajectoryPoints, topViewLandmarkPointsX, topViewLandmarkPointsY, topViewCarPointsX, topViewCarPointsY, ba, groundTruth)
+function [] = updateFigure(fig, img, frameNum, imgPoints, candidatePoints, numLandmarksPoint, fullTrajectoryPoints, topViewLandmarkPointsX, topViewLandmarkPointsY, topViewCarPointsX, topViewCarPointsY, ba, groundTruth)
     % UPDATEFIGURE
     % updates plots with data from newest frame
 
@@ -18,12 +18,14 @@ function [] = updateFigure(fig, img, frameNum, imgPoints, numLandmarksPoint, ful
     % Top left corner: plot current frame and keypoints or whatever else we'd like
     % TODO: Center this image?
     imshow(img, 'Parent', fig.currentFramePlot);
-    plot(fig.currentFramePlot, imgPoints(:,1), imgPoints(:,2), 'co');
+    plot(fig.currentFramePlot, candidatePoints(:,1), candidatePoints(:,2), 'ro')
+    hold on
+    plot(fig.currentFramePlot, imgPoints(:,1), imgPoints(:,2), 'go');
     title(sprintf('Current Frame: No. %d', frameNum), 'Parent', fig.currentFramePlot);
 
     % Top right corner: plot 3D landmarks and car position as seen from above in last numFrames frames
     % concatenate cells to get full X and Y sets    
-    plot(fig.topViewPlot, topViewCarPointsX, topViewCarPointsY, '-ro');
+    plot(fig.topViewPlot, topViewCarPointsX(max(1, end - 20):end), topViewCarPointsY(max(1, end - 20):end), '-ro');
     hold(fig.topViewPlot, 'on')
     plot(fig.topViewPlot, cell2mat(topViewLandmarkPointsX), cell2mat(topViewLandmarkPointsY), 'ko', 'MarkerSize', 2);
     hold(fig.topViewPlot, 'off')
@@ -36,7 +38,9 @@ function [] = updateFigure(fig, img, frameNum, imgPoints, numLandmarksPoint, ful
         rangeY = 0;
     end
 
-    ylim(fig.topViewPlot, [medianY - 2 * rangeY - 1, medianY + 2 * rangeY + 1]);
+    miny = min(min(topViewCarPointsY(max(1, end - 20):end)), medianY - 2 * rangeY);
+    maxy = max(max(topViewCarPointsY(max(1, end - 20):end)), medianY + 2 * rangeY);
+    ylim(fig.topViewPlot, [miny, maxy]);
 
     medianX = median(cell2mat(topViewLandmarkPointsX));
     rangeX = std(rmoutliers(cell2mat(topViewLandmarkPointsX)));
@@ -45,20 +49,22 @@ function [] = updateFigure(fig, img, frameNum, imgPoints, numLandmarksPoint, ful
         rangeX = 0;
     end
 
-    xlim(fig.topViewPlot, [medianX - 2 * rangeX - 1, medianX + 2 * rangeX + 1]);
+    minx = min(min(topViewCarPointsX(max(1, end - 20):end)), medianX - 2 * rangeX);
+    maxx = max(max(topViewCarPointsX(max(1, end - 20):end)), medianX + 2 * rangeX);
+    xlim(fig.topViewPlot, [minx, maxx]);
 
     % Bottom left corner: number of keypoints tracked over the last numFrames frames
     % uber janky way of getting this to plot from -numFrames to 0
     % TODO: Update this figure
     [x,y] = getpoints(fig.numLandmarksData);
-    addpoints(fig.numLandmarksData, x-(max(x)+1), y);
     addpoints(fig.numLandmarksData, x(end)+1, numLandmarksPoint)
-
+    ylim(fig.numLandmarksPlot, [0, max(y) + 1])
+    xlim(fig.numLandmarksPlot, [max(1, x(end) - 20), x(end) + 2])
 
     % Bottom right corner: position of vehicle over time?
     addpoints(fig.fullTrajectoryData, fullTrajectoryPoints(:,1), fullTrajectoryPoints(:,2))
     if ~isempty(groundTruth)
-        addpoints(fig.groundTruthData, groundTruth(frameNum, 1), groundTruth(frameNum, 3));
+%         addpoints(fig.groundTruthData, groundTruth(frameNum, 1), groundTruth(frameNum, 3));
 %         legend('Calculated Trajectory', 'Ground Truth Trajectory)');
     end
     
