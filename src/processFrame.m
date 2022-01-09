@@ -99,7 +99,7 @@ if ba.window
     ba = doBundleAdjustment(ba, i, I_2, intrinsics, T_WC_i, ...
         P, X, validity, ransac_inlier_ids);
     if ba.vSet.NumViews > ba.window
-%         X = ba.xyzPointsRefined{end};
+        X = ba.xyzPointsRefined{end};
 %         T_WC_j = [ba.cameraPoseWC_i.Orientation{end-1}, ba.cameraPoseWC_i.Location{end-1}'];
 %         T_WC_j(4,4) = 1;
 %         T_j_i = [ba.cameraPoses.Orientation{end}, ba.cameraPoses.Location{end}'];

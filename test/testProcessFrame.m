@@ -33,7 +33,7 @@ topViewLastCell = 1;
 % Bundle Adjustment
 ba = struct;
 ba.vSet = imageviewset;
-ba.window = 3; % Set to 0 to turn off bundle adjustment
+ba.window = 25; % Set to 0 to turn off bundle adjustment
 ba.cameraPoses.ViewId = [];
 ba.cameraPoses.Orientation = {};
 ba.cameraPoses.Location = {};

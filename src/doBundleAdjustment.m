@@ -84,6 +84,8 @@ function [ba] = doBundleAdjustment(ba, i, img, intrinsics, T_WC_i, P, X, validit
         ba.cameraPoses.ViewId = ba.cameraPoses.ViewId(2:end);
         ba.cameraPoses.Orientation = ba.cameraPoses.Orientation(2:end);
         ba.cameraPoses.Location = ba.cameraPoses.Location(2:end); 
+        ba.cameraPoseWC_i.Orientation = ba.cameraPoseWC_i.Orientation(2:end);
+        ba.cameraPoseWC_i.Location = ba.cameraPoseWC_i.Location(2:end);
     end
 end
 

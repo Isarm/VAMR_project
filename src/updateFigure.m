@@ -69,13 +69,19 @@ function [] = updateFigure(fig, img, frameNum, imgPoints, candidatePoints, numLa
     end
     
     if ~isempty(ba.refinedPoses)
-        T_WC_j = [ba.cameraPoseWC_i.Orientation{end-1}, ba.cameraPoseWC_i.Location{end-1}'];
-        T_WC_j(4,4) = 1;
-        T_j_i = [ba.cameraPoses.Orientation{end}, ba.cameraPoses.Location{end}'];
-        T_j_i(4,4) = 1;
-        T_WC_i = T_WC_j * T_j_i;
-        pose = T_WC_i(1:3,4);
-        addpoints(fig.fullTrajectoryDataBA , pose(1), pose(3));
+        
+        if ba.vSet.NumViews > ba.window
+            clearpoints(fig.fullTrajectoryDataBA)
+            for j = 1:size(ba.cameraPoseWC_i.Orientation,1)-1
+                T_WC_j = [ba.cameraPoseWC_i.Orientation{j}, ba.cameraPoseWC_i.Location{j}'];
+                T_WC_j(4,4) = 1;
+                T_j_i = [ba.cameraPoses.Orientation{j}, ba.cameraPoses.Location{j}'];
+                T_j_i(4,4) = 1;
+                T_WC_i = T_WC_j * T_j_i;
+                pose = T_WC_i(1:3,4);
+                addpoints(fig.fullTrajectoryDataBA , pose(1), pose(3));
+            end
+        end
     end
     
     drawnow
