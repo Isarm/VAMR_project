@@ -55,7 +55,17 @@ X = X(validity, :);
         'MaxReprojectionError', parameters.MaxReprojectionError);
 
 T_WC_i = [worldOrientation', worldLocation'];
-T_WC_i(4, 4) = 1; % Make it a homogeneous transformation matrix
+
+T_WC_i(4, 4) = 1 % Make it a homogeneous transformation matrix
+
+[R,t] = cameraPoseToExtrinsics(worldOrientation,worldLocation);
+
+% Remove landmarks that lie behind the camera
+Xc = R'*X'+t';
+X = X(Xc(3, :) > 0, :);
+P = P(Xc(3, :) > 0, :);
+ransac_inlier_ids = ransac_inlier_ids(Xc(3,:)>0);
+
 
 % Delete points that are not inliers
 P = P(ransac_inlier_ids, :);
