@@ -1,4 +1,4 @@
-function [P_new, X_new, remove] = getNewLandmarks(F, C, T_F, T_C, intrinsics, alpha)
+function [P_new, X_new, remove] = getNewLandmarks(F, C, T_F, T_C, intrinsics, parameters)
 %GETNEWLANDMARKS Gets new 3D landmarks from previously matched points
 %   Summary:
 %     First it triangulates the 3D locations of matched points. After this
@@ -73,7 +73,7 @@ V_C = landmarks3D' - O_C;
 angles = atan2(vecnorm(cross(V_F,V_C)), dot(V_F,V_C))';
 
 %% Only keep entries if the angle is sufficiently large and the reprojection error is small enough
-indices = abs(angles) > alpha & valid & (repr < 1);
+indices = abs(angles) > parameters.alpha & valid & (repr < 1);
 
 P_new = C(indices, :);
 X_new = landmarks3D(indices, :);

@@ -1,12 +1,12 @@
-function [keyPoints, landmarks3D, R, T] = bootstrap(img0, img1, intrinsics)
+function [keyPoints, landmarks3D, R, T] = bootstrap(img0, img1, intrinsics, parameters)
 %INTITIALIZE Initialize the VO pipeline
 %   Takes 2 initial images, extracts and matches features to determine the
 %   pose. The inlier keypoints are then triangulated, and
 %   returned with their corresponding 3D locations.
 
-% Extract ORB features
-[img0Features, img0ValidPoints] = getORBFeatures(img0);
-[img1Features, img1ValidPoints] = getORBFeatures(img1);
+% Extract Harris features
+[img0Features, img0ValidPoints] = getHarrisFeatures(img0, parameters);
+[img1Features, img1ValidPoints] = getHarrisFeatures(img1, parameters);
 
 % uses SSD (Sum of Square Differences) by default
 matchIndices = matchFeatures(img0Features, img1Features);

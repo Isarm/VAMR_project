@@ -1,4 +1,4 @@
-function [points2, validity] = trackPoints(img1, img2, points1)
+function [points2, validity] = trackPoints(img1, img2, points1, parameters)
     % Tracks points between frames using KLT algorithm
     % mainly uses: https://www.mathworks.com/help/vision/ref/vision.pointtracker-system-object.html#d123e87705
 
@@ -18,7 +18,11 @@ function [points2, validity] = trackPoints(img1, img2, points1)
         return
     end
 
-    pointTracker = vision.PointTracker('MaxBidirectionalError', 3, 'MaxIterations', 50, 'BlockSize', [21 21]);
+    pointTracker = vision.PointTracker( ...
+        'MaxBidirectionalError', parameters.MaxBidirectionalError, ...
+        'MaxIterations', parameters.MaxIterations, ...
+        'BlockSize', parameters.BlockSize);
+    
     initialize(pointTracker, points1, img1);
     [matchedPoints, validity] = pointTracker(img2);
 

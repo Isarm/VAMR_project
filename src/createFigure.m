@@ -1,4 +1,4 @@
-function [fig, topViewLandmarksX, topViewLandmarksY, topViewCarX, topViewCarY] = createFigure(numPointsNumLandmarks, numFrames)
+function [fig, topViewLandmarksX, topViewLandmarksY, topViewCarX, topViewCarZ] = createFigure(numPointsNumLandmarks, numFrames, ds)
     %CREATEFIGURE
     % Creates and returns a figure which can be updated with each frame processed
 
@@ -33,13 +33,17 @@ function [fig, topViewLandmarksX, topViewLandmarksY, topViewCarX, topViewCarY] =
     % since matlab is pass by value only, we need to update these outside this function
     topViewLandmarksX = cell(1,numFrames);
     topViewLandmarksY = cell(1,numFrames);
-    topViewCarX = cell(1,numFrames);
-    topViewCarY = cell(1,numFrames);
+    topViewCarX = zeros(1,numFrames);
+    topViewCarZ = zeros(1,numFrames);
     % landmark data is given in singles
     % coordinates of vehicle are given in doubles (default)
     for i = 1:numFrames
         topViewLandmarksX{i} = single([]);
         topViewLandmarksY{i} = single([]);
+    end
+    
+    if ds == 2
+        fig.groundTruthData = animatedline('Color', 'k', 'Marker', 'o');
     end
     
     % Bottom left corner: number of keypoints tracked over the last numFrames frames
@@ -54,5 +58,9 @@ function [fig, topViewLandmarksX, topViewLandmarksY, topViewCarX, topViewCarY] =
     % Bottom right corner: position of vehicle over time?
     fig.fullTrajectoryPlot = subplot(2,4,6);
     fig.fullTrajectoryData = animatedline('Color', 'r', 'Marker', 'o');
+    if ds == 2
+        fig.groundTruthData = animatedline('Color', 'k', 'Marker', 'o');
+    end
+    
     title('Full Trajectory')
 end
