@@ -59,6 +59,7 @@ function [fig, topViewLandmarksX, topViewLandmarksY, topViewCarX, topViewCarZ] =
     if ds == 2
         fig.groundTruthData = animatedline('Color', 'k', 'Marker', 'o');
     end
+    axis equal;
     
     title('Full Trajectory')
 end
