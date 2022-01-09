@@ -7,7 +7,7 @@ close all
 
 ds = 0;
 
-parameters = getParameters(ds);
+parameters = getParameters();
 
 % Get Ground Truth Poses for Parking Datatset
 if ds == 2
