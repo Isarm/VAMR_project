@@ -58,7 +58,7 @@ function [] = updateFigure(fig, img, frameNum, imgPoints, candidatePoints, numLa
     % TODO: Update this figure
     [x,y] = getpoints(fig.numLandmarksData);
     addpoints(fig.numLandmarksData, x(end)+1, numLandmarksPoint)
-    ylim(fig.numLandmarksPlot, [min(y) - 1, max(y) + 1])
+    ylim(fig.numLandmarksPlot, [0, max(y) + 1])
     xlim(fig.numLandmarksPlot, [max(1, x(end) - 20), x(end) + 2])
 
     % Bottom right corner: position of vehicle over time?
