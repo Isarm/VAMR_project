@@ -62,7 +62,6 @@ while true
     [row2,~] = size(X2);
     numNewLandmarks = row2 - row1;
 
-    % TODO: FIX THIS CUS THIS DOES NOT MAKE SENSE
     topViewLandmarksX{topViewLastCell} = single(X2(:,1)');
     topViewLandmarksZ{topViewLastCell} = single(X2(:,3)');
     topViewCarX(i) = T(1,4); % x
