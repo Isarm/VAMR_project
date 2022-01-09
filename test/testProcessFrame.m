@@ -4,9 +4,9 @@ close all
 
 %% Tests processFrame
 % Can be used to step through the processFrame function
-ds = 0;
+ds = 4;
 
-parameters = getParameters();
+parameters = getParameters(ds);
 
 % Get Ground Truth Poses for Parking Datatset
 if ds == 2
