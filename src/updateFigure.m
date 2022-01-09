@@ -1,4 +1,4 @@
-function [] = updateFigure(fig, img, frameNum, imgPoints, candidatePoints, numLandmarksPoint, fullTrajectoryPoints, topViewLandmarkPointsX, topViewLandmarkPointsY, topViewCarPointsX, topViewCarPointsY)
+function [] = updateFigure(fig, img, frameNum, imgPoints, candidatePoints, numLandmarksPoint, fullTrajectoryPoints, topViewLandmarkPointsX, topViewLandmarkPointsY, topViewCarPointsX, topViewCarPointsY, groundTruth)
     % UPDATEFIGURE
     % updates plots with data from newest frame
 
@@ -59,6 +59,10 @@ function [] = updateFigure(fig, img, frameNum, imgPoints, candidatePoints, numLa
 
     % Bottom right corner: position of vehicle over time?
     addpoints(fig.fullTrajectoryData, fullTrajectoryPoints(:,1), fullTrajectoryPoints(:,2))
-
+    if ~isempty(groundTruth)
+        addpoints(fig.groundTruthData, groundTruth(frameNum, 1), groundTruth(frameNum, 3));
+%         legend('Calculated Trajectory', 'Ground Truth Trajectory)');
+    end
+    
     drawnow
 end
