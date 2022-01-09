@@ -2,7 +2,7 @@
 
 ## How to run:
 
-First, we need to initialize our MATLAB's workspace executing:
+First, we need to initialize our MATLAB's workspace executing (make sure the databases are located under the `data` folder):
 
 ```
 init_workspace
