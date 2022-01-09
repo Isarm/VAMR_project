@@ -1,4 +1,4 @@
-function [fig, topViewLandmarksX, topViewLandmarksY, topViewCarX, topViewCarZ] = createFigure(numPointsNumLandmarks, numFrames)
+function [fig, topViewLandmarksX, topViewLandmarksY, topViewCarX, topViewCarZ] = createFigure(numPointsNumLandmarks, numFrames, ds)
     %CREATEFIGURE
     % Creates and returns a figure which can be updated with each frame processed
 
@@ -42,6 +42,10 @@ function [fig, topViewLandmarksX, topViewLandmarksY, topViewCarX, topViewCarZ] =
         topViewLandmarksY{i} = single([]);
     end
     
+    if ds == 2
+        fig.groundTruthData = animatedline('Color', 'k', 'Marker', 'o');
+    end
+    
     % Bottom left corner: number of keypoints tracked over the last numFrames frames
     % TODO: Make this figure more clear
     fig.numLandmarksPlot = subplot(2,4,5);
@@ -54,5 +58,9 @@ function [fig, topViewLandmarksX, topViewLandmarksY, topViewCarX, topViewCarZ] =
     % Bottom right corner: position of vehicle over time?
     fig.fullTrajectoryPlot = subplot(2,4,6);
     fig.fullTrajectoryData = animatedline('Color', 'r', 'Marker', 'o');
+    if ds == 2
+        fig.groundTruthData = animatedline('Color', 'k', 'Marker', 'o');
+    end
+    
     title('Full Trajectory')
 end

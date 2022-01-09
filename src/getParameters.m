@@ -65,11 +65,11 @@ elseif ds == 1
 elseif ds == 2
     % Bootstrapping
     parameters.bootstrapFrame1 = 0;
-    parameters.bootstrapFrame2 = 3;
+    parameters.bootstrapFrame2 = 5;
     
     % Harris Features
     parameters.MinQuality = 2e-5; % Bootstrapping
-    parameters.MinQualityC = 1e-4; % Continuous
+    parameters.MinQualityC = 1e-3; % Continuous
     parameters.FilterSize = 9;
     parameters.tolerance = 1;
     parameters.HarrisMaxFeatures = 200;
@@ -79,7 +79,7 @@ elseif ds == 2
     parameters.NumPyramidLevels = 3;
     parameters.MaxBidirectionalError = 3;
     parameters.MaxIterations = 50;
-    parameters.BlockSize = [21 21];
+    parameters.BlockSize = [31 31];
     
     % P3P
     parameters.MaxNumTrials = 25000;
