@@ -1,6 +1,6 @@
 %% testTrackPoints
 % this script tests point tracking using KLT
-params = getParameters(0);
+params = getParameters();
 
 % get first images of dataset, as well as camera instrinsics
 [img1, img2, intrinsics] = getInitialFrames(0, 0, 2);

@@ -26,7 +26,7 @@ else
     assert(false);
 end
 
-params = getParameters(0);
+params = getParameters();
 
 figure;
 i = 1;

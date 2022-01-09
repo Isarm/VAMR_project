@@ -18,7 +18,7 @@ numPointsNumLandmarks = 50;
 numFrames = 20;
 
 %% Setup
-parameters = getParameters(ds);
+parameters = getParameters();
 [img1, img2, intrinsics] = getInitialFrames(ds, bootstrapFrame1, bootstrapFrame2);
 [fig, topViewLandmarksX, topViewLandmarksZ, topViewCarX, topViewCarZ] = createFigure(numPointsNumLandmarks, numFrames);
 
