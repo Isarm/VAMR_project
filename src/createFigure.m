@@ -50,10 +50,8 @@ function [fig, topViewLandmarksX, topViewLandmarksY, topViewCarX, topViewCarZ] =
     % TODO: Make this figure more clear
     fig.numLandmarksPlot = subplot(2,4,5);
     fig.numLandmarksData = animatedline('MaximumNumPoints',numPointsNumLandmarks, 'Color', 'g', 'Marker', 'o');
-    xlim([-numFrames, 0])
     title(sprintf('Number of landmarks tracked over last %d frames', numFrames));
     addpoints(fig.numLandmarksData, 0, 0)
-    axis equal;
 
     % Bottom right corner: position of vehicle over time?
     fig.fullTrajectoryPlot = subplot(2,4,6);

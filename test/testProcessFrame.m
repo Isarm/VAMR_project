@@ -4,8 +4,7 @@ close all
 
 %% Tests processFrame
 % Can be used to step through the processFrame function
-
-ds = 3;
+ds = 1;
 
 parameters = getParameters();
 
