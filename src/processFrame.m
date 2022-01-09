@@ -56,7 +56,7 @@ X = X(validity, :);
 
 T_WC_i = [worldOrientation', worldLocation'];
 
-T_WC_i(4, 4) = 1 % Make it a homogeneous transformation matrix
+T_WC_i(4, 4) = 1; % Make it a homogeneous transformation matrix
 
 % Delete points that are not inliers
 P = P(ransac_inlier_ids, :);
@@ -78,12 +78,6 @@ T(remove, :) = [];
 P = [P ; P_new];
 X = [X ; X_new];
 
-%% Bundle Adjustment
-if ba.window
-    ba = doBundleAdjustment(ba, i, I_2, intrinsics, T_WC_i, ...
-        P, X, validity, ransac_inlier_ids);
-end
-
 %% Find the features in the new image and update the state
 [~,N] = getHarrisFeatures(I_2, parameters);
 
@@ -99,6 +93,20 @@ C = [C ; N];
 F = [F ; N];
 % Update the set for first observation for each candidate keypoint
 T = [T ; repmat(T_WC_i(:)', [size(N, 1), 1])];
+
+%% Bundle Adjustment
+if ba.window
+    ba = doBundleAdjustment(ba, i, I_2, intrinsics, T_WC_i, ...
+        P, X, validity, ransac_inlier_ids);
+    if ba.vSet.NumViews > ba.window
+%         X = ba.xyzPointsRefined{end};
+%         T_WC_j = [ba.cameraPoseWC_i.Orientation{end-1}, ba.cameraPoseWC_i.Location{end-1}'];
+%         T_WC_j(4,4) = 1;
+%         T_j_i = [ba.cameraPoses.Orientation{end}, ba.cameraPoses.Location{end}'];
+%         T_j_i(4,4) = 1;
+%         T_WC_i = T_WC_j * T_j_i;
+    end
+end
 
 %% Store Local Variables in State of Current Frame
 S_2.P = P; % Set of keypoints in the ith (current) frame (K'x2)

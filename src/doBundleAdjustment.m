@@ -21,9 +21,12 @@ function [ba] = doBundleAdjustment(ba, i, img, intrinsics, T_WC_i, P, X, validit
     last = last(validity,:);
     last = last(ransac_inlier_ids,:);
     ba.xyzPoints(end) = {last};
+    ba.xyzPointsRefined(end) = {last};
     ba.sizexyzPoints(end) = size(last,1);
     
+    % Add new landmarks
     ba.xyzPoints = [ba.xyzPoints; X];
+    ba.xyzPointsRefined = [ba.xyzPointsRefined; X];
     ba.sizexyzPoints = [ba.sizexyzPoints; size(X,1)];
         
     % Compute Relative Transformation Between Frames
@@ -44,35 +47,44 @@ function [ba] = doBundleAdjustment(ba, i, img, intrinsics, T_WC_i, P, X, validit
         
         % Number of XYZ points must match number of pointTracks
         xyzPoints_ = cell2mat(ba.xyzPoints(1:end-1));
-        [xyzPoints, ia, ic] = unique(xyzPoints_, 'stable', 'Rows');
+        
+        [xyzPoints, ia, ~] = unique(xyzPoints_, 'stable', 'Rows');
+        xyzPointsRefined_ = cell2mat(ba.xyzPointsRefined(1:end-1));
+        xyzPointsRefined = xyzPointsRefined_(ia,:);
         
         % Bundle Adjustment
-        [ba.xyzRefinedPoints,ba.refinedPoses, ba.reprojectionErrors] = ...
-            bundleAdjustment(xyzPoints,pointTracks,struct2table(ba.cameraPoses),intrinsics);
-
-        % Store New Points
-        % TODO: ...
-%         xyzPointsAll = cell2mat(ba.xyzPoints);  
-%         [xyzPointsAll_, ia__, ic__] = unique(xyzPointsAll, 'stable', 'Rows');
-%         assert(any(any(xyzPointsAll_(ia,:) == xyzPoints_(ia,:))));
-%         
-%         xyzPointsAll_(ia,:) = ba.xyzRefinedPoints;
-%         xyzPointsAll = xyzPointsAll_(ic__,:);
-%         
-%         ba.xyzPoints = mat2cell(xyzPointsAll, ba.sizexyzPoints, 3);
-        
-        % Store New Poses
-        ba.cameraPoses.Orientation = ba.refinedPoses.Orientation;
-        ba.cameraPoses.Location = ba.refinedPoses.Location;
+        [xyzRefinedPoints,ba.refinedPoses, ba.reprojectionErrors] = ...
+            bundleAdjustment(xyzPointsRefined,pointTracks,struct2table(ba.cameraPoses),intrinsics, ...
+            'MaxIterations', 500);
                 
+        difference = ba.refinedPoses.Location{end}-(ba.cameraPoseWC_i.Location{end-2} + ba.cameraPoses.Location{end-1});
+        norm(difference([1,3]))
+        
+        if norm(difference([1,3])) > 0
+            % Store New Points
+            xyzPointsAll_ = cell2mat(ba.xyzPoints);
+            [xyzPointsAll, ia__, ~] = unique(xyzPointsAll_, 'stable', 'Rows');
+            [~, index]=ismember(xyzPoints,xyzPointsAll,'rows');
+            xyzPointsAll(index,:) = xyzRefinedPoints;
+            xyzPointsAll_(ia__,:) = xyzPointsAll;
+            ba.xyzPointsRefined = mat2cell(xyzPointsAll_, ba.sizexyzPoints, 3);
+
+            % Store New Poses
+            ba.cameraPoses.Orientation = ba.refinedPoses.Orientation;
+            ba.cameraPoses.Location = ba.refinedPoses.Location;
+        else
+            ba.xyzPointsRefined = ba.xyzPoints;
+            disp('help');
+        end
+        
         % Throw away points outside the window
         ba.xyzPoints = ba.xyzPoints(2:end);
+        ba.xyzPointsRefined = ba.xyzPointsRefined(2:end);
         ba.sizexyzPoints = ba.sizexyzPoints(2:end);
         ba.cameraPoses.ViewId = ba.cameraPoses.ViewId(2:end);
         ba.cameraPoses.Orientation = ba.cameraPoses.Orientation(2:end);
-        ba.cameraPoses.Location = ba.cameraPoses.Location(2:end);        
+        ba.cameraPoses.Location = ba.cameraPoses.Location(2:end); 
     end
- 
 end
 
 function newMatches = updateMatches(matches,validity)

@@ -4,7 +4,7 @@ close all
 
 %% Tests processFrame
 % Can be used to step through the processFrame function
-ds = 2;
+ds = 0;
 
 parameters = getParameters(ds);
 
@@ -33,14 +33,14 @@ topViewLastCell = 1;
 % Bundle Adjustment
 ba = struct;
 ba.vSet = imageviewset;
-ba.window = 10; % Set to 0 to turn off bundle adjustment
+ba.window = 3; % Set to 0 to turn off bundle adjustment
 ba.cameraPoses.ViewId = [];
 ba.cameraPoses.Orientation = {};
 ba.cameraPoses.Location = {};
 ba.xyzPoints = {}; % Organized by frame
+ba.xyzPointsRefined = {};
 ba.sizexyzPoints = [];
 
-ba.xyzRefinedPoints = [];
 ba.refinedPoses = []; 
 ba.reprojectionErrors = [];
 
@@ -50,6 +50,7 @@ if ba.window
     [F,~] = extractFeatures(img2, keyPoints, 'Method', 'FREAK');
     ba.vSet = addView(ba.vSet,uint32(parameters.bootstrapFrame2),'Features',F,'Points', keyPoints);
     ba.xyzPoints = [ba.xyzPoints; landmarks3D];
+    ba.xyzPointsRefined = [ba.xyzPointsRefined; landmarks3D];
     ba.sizexyzPoints = [ba.sizexyzPoints; size(landmarks3D,1)];
     % TODO: When parameters.bootstrapFrame2 is not equal to 1
     ba.cameraPoses.ViewId = [ba.cameraPoses.ViewId; uint32(parameters.bootstrapFrame2)];
@@ -57,7 +58,7 @@ if ba.window
     ba.cameraPoses.Location = [ba.cameraPoses.Location; T]; % Relative Camera Pose
     ba.cameraPoseWC_i.Orientation = {R};
     ba.cameraPoseWC_i.Location = {T};
-    % ba.xyzPoints{1} = landmarks3D; % TODO: Do I need this?
+
 end
 
 S = struct;
