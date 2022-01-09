@@ -5,10 +5,10 @@ function parameters = getParameters(ds)
 % Dataset Selection
 % 0: KITTI, 1: Malaga, 2: parking
 
-if ds == 0
+if ds == 0 
     % Bootstrapping
-    parameters.bootstrapFrame1 = 98;
-    parameters.bootstrapFrame2 = 100;
+    parameters.bootstrapFrame1 = 1;
+    parameters.bootstrapFrame2 = 3;
     
     % Harris Features
     parameters.MinQuality = 1e-4; % Bootstrapping
@@ -92,8 +92,8 @@ elseif ds == 2
 
 elseif ds == 3
     % Bootstrapping
-    parameters.bootstrapFrame1 = 98;
-    parameters.bootstrapFrame2 = 100;
+    parameters.bootstrapFrame1 = 1;
+    parameters.bootstrapFrame2 = 3;
     
     % Harris Features
     parameters.MinQuality = 1e-4; % Bootstrapping
@@ -120,8 +120,8 @@ elseif ds == 3
 
 elseif ds == 4
     % Bootstrapping
-    parameters.bootstrapFrame1 = 98;
-    parameters.bootstrapFrame2 = 100;
+    parameters.bootstrapFrame1 = 1;
+    parameters.bootstrapFrame2 = 3;
     
     % Harris Features
     parameters.MinQuality = 1e-4; % Bootstrapping
