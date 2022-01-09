@@ -21,40 +21,60 @@ function [ba] = doBundleAdjustment(ba, i, img, intrinsics, T_WC_i, P, X, validit
     last = last(validity,:);
     last = last(ransac_inlier_ids,:);
     ba.xyzPoints(end) = {last};
-    ba.xyzPoints = [ba.xyzPoints; X];
+    ba.sizexyzPoints(end) = size(last,1);
     
+    ba.xyzPoints = [ba.xyzPoints; X];
+    ba.sizexyzPoints = [ba.sizexyzPoints; size(X,1)];
+        
+    % Compute Relative Transformation Between Frames
     ba.cameraPoses.ViewId = [ba.cameraPoses.ViewId; uint32(i)];
-    ba.cameraPoses.Orientation = [ba.cameraPoses.Orientation; T_WC_i(1:3,1:3)];
-    ba.cameraPoses.Location = [ba.cameraPoses.Location; T_WC_i(1:3,4)'];
+    C_R = inv(ba.cameraPoseWC_i.Orientation{end})\T_WC_i(1:3,1:3);
+    C_T = T_WC_i(1:3,4)' - ba.cameraPoseWC_i.Location{end};
+    
+    ba.cameraPoseWC_i.Orientation = [ba.cameraPoseWC_i.Orientation; T_WC_i(1:3,1:3)];
+    ba.cameraPoseWC_i.Location = [ba.cameraPoseWC_i.Location; T_WC_i(1:3,4)'];
+    
+    ba.cameraPoses.Orientation = [ba.cameraPoses.Orientation; C_R];
+    ba.cameraPoses.Location = [ba.cameraPoses.Location; C_T];
 
     if ba.vSet.NumViews > ba.window
         % Build Point Tracks Object 
         window = i-ba.window:i;
         pointTracks = findTracks(ba.vSet, window);
-
+        
         % Number of XYZ points must match number of pointTracks
-        xyzPoints = unique(cell2mat(ba.xyzPoints(1:end-1)), 'Rows');
+        xyzPoints_ = cell2mat(ba.xyzPoints(1:end-1));
+        [xyzPoints, ia, ic] = unique(xyzPoints_, 'stable', 'Rows');
+        
+        % Bundle Adjustment
         [ba.xyzRefinedPoints,ba.refinedPoses, ba.reprojectionErrors] = ...
             bundleAdjustment(xyzPoints,pointTracks,struct2table(ba.cameraPoses),intrinsics);
 
-        % Store New Points and Poses
-%             T_WC_i = [worldOrientation, worldLocation'];
+        % Store New Points and Poses 
+        % TODO: ...
+%         xyzPointsAll = cell2mat(ba.xyzPoints);  
+%         [xyzPointsAll_, ia__, ic__] = unique(xyzPointsAll, 'stable', 'Rows');
+%         assert(any(any(xyzPointsAll_(ia,:) == xyzPoints_(ia,:))));
+%         
+%         xyzPointsAll_(ia,:) = ba.xyzRefinedPoints;
+%         xyzPointsAll = xyzPointsAll_(ic__,:);
+%         
+%         ba.xyzPoints = mat2cell(xyzPointsAll, ba.sizexyzPoints, 3);
+        
         ba.cameraPoses.Orientation = ba.refinedPoses.Orientation;
         ba.cameraPoses.Location = ba.refinedPoses.Location;
-%         xyzPoints = ba.xyzRefinedPoints;
-
+                
         % Throw away points outside the window
         ba.xyzPoints = ba.xyzPoints(2:end);
+        ba.sizexyzPoints = ba.sizexyzPoints(2:end);
         ba.cameraPoses.ViewId = ba.cameraPoses.ViewId(2:end);
         ba.cameraPoses.Orientation = ba.cameraPoses.Orientation(2:end);
         ba.cameraPoses.Location = ba.cameraPoses.Location(2:end);        
     end
+ 
 end
 
 function newMatches = updateMatches(matches,validity)
-    %UNTITLED Summary of this function goes here
-    %   Detailed explanation goes here
-
     if length(matches) ~= length(validity)
     print('error')
     return;

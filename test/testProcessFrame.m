@@ -32,27 +32,30 @@ topViewLastCell = 1;
 % Bundle Adjustment
 ba = struct;
 ba.vSet = imageviewset;
-ba.window = 5; % Set to 0 to turn off bundle adjustment
+ba.window = 10; % Set to 0 to turn off bundle adjustment
 ba.cameraPoses.ViewId = [];
 ba.cameraPoses.Orientation = {};
 ba.cameraPoses.Location = {};
 ba.xyzPoints = {}; % Organized by frame
+ba.sizexyzPoints = [];
 
 ba.xyzRefinedPoints = [];
 ba.refinedPoses = []; 
 ba.reprojectionErrors = [];
 
 if ba.window
-     % Note: FREAK used because extractFeatures cornerPoint objects
-     % default uses FREAK method
-     [F,~] = extractFeatures(img2, keyPoints, 'Method', 'FREAK');
-     ba.vSet = addView(ba.vSet,uint32(parameters.bootstrapFrame2),'Features',F,'Points', keyPoints);
-     ba.xyzPoints = [ba.xyzPoints; landmarks3D];
-     % TODO: When parameters.bootstrapFrame2 is not equal to 1
-     ba.cameraPoses.ViewId = [ba.cameraPoses.ViewId; uint32(parameters.bootstrapFrame2)];
-     ba.cameraPoses.Orientation = [ba.cameraPoses.Orientation; R']; % TODO?
-     ba.cameraPoses.Location = [ba.cameraPoses.Location; -T * R']; % TODO?
-
+    % Note: FREAK used because extractFeatures cornerPoint objects
+    % default uses FREAK method
+    [F,~] = extractFeatures(img2, keyPoints, 'Method', 'FREAK');
+    ba.vSet = addView(ba.vSet,uint32(parameters.bootstrapFrame2),'Features',F,'Points', keyPoints);
+    ba.xyzPoints = [ba.xyzPoints; landmarks3D];
+    ba.sizexyzPoints = [ba.sizexyzPoints; size(landmarks3D,1)];
+    % TODO: When parameters.bootstrapFrame2 is not equal to 1
+    ba.cameraPoses.ViewId = [ba.cameraPoses.ViewId; uint32(parameters.bootstrapFrame2)];
+    ba.cameraPoses.Orientation = [ba.cameraPoses.Orientation; R]; % Relative Camera Pose
+    ba.cameraPoses.Location = [ba.cameraPoses.Location; T]; % Relative Camera Pose
+    ba.cameraPoseWC_i.Orientation = {R};
+    ba.cameraPoseWC_i.Location = {T};
     % ba.xyzPoints{1} = landmarks3D; % TODO: Do I need this?
 end
 
