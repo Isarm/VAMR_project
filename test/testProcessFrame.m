@@ -2,10 +2,15 @@ clc
 clear
 close all
 
-%% Tests processFrame
-% Can be used to step through the processFrame function
-ds = 4;
+%% INPUT: Select Dataset
+% 0: KITTI
+% 1: Malaga
+% 2: parking
+% 3: Custom Dataset
+% 4: Custom Dataset (High FOV)
+ds = 0;
 
+%%
 parameters = getParameters(ds);
 
 % Get Ground Truth Poses for Parking Datatset
