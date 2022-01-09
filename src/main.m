@@ -8,7 +8,7 @@ close all
 
 %% [INPUTS] 
 % Dataset Selection
-ds = 0; % 0: KITTI, 1: Malaga, 2: parking
+ds = 4; % 0: KITTI, 1: Malaga, 2: parking
 
 % TODO: For each datast, different bootstrap frames
 bootstrapFrame1 = 0;
