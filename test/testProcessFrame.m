@@ -4,7 +4,7 @@ close all
 
 %% Tests processFrame
 % Can be used to step through the processFrame function
-ds = 1;
+ds = 0;
 
 parameters = getParameters();
 
@@ -42,7 +42,7 @@ i = parameters.bootstrapFrame2 + 1;
 
 while true
     img1 = img2;
-    [img2, ~, ~] = getInitialFrames(ds, i, 1);
+    img2 = getFrame(ds, i);
 %     imshow(img2);
     % I need to track both S1 and S2 temporarily to find
     % the new 3D landmark points only
