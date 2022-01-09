@@ -50,7 +50,7 @@ function [ba] = doBundleAdjustment(ba, i, img, intrinsics, T_WC_i, P, X, validit
         [ba.xyzRefinedPoints,ba.refinedPoses, ba.reprojectionErrors] = ...
             bundleAdjustment(xyzPoints,pointTracks,struct2table(ba.cameraPoses),intrinsics);
 
-        % Store New Points and Poses 
+        % Store New Points
         % TODO: ...
 %         xyzPointsAll = cell2mat(ba.xyzPoints);  
 %         [xyzPointsAll_, ia__, ic__] = unique(xyzPointsAll, 'stable', 'Rows');
@@ -61,6 +61,7 @@ function [ba] = doBundleAdjustment(ba, i, img, intrinsics, T_WC_i, P, X, validit
 %         
 %         ba.xyzPoints = mat2cell(xyzPointsAll, ba.sizexyzPoints, 3);
         
+        % Store New Poses
         ba.cameraPoses.Orientation = ba.refinedPoses.Orientation;
         ba.cameraPoses.Location = ba.refinedPoses.Location;
                 
