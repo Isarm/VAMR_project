@@ -4,13 +4,24 @@ close all
 
 %% Tests processFrame
 % Can be used to step through the processFrame function
-ds = 1;
+ds = 2;
 parameters = getParameters(ds);
+
+% Get Ground Truth Poses for Parking Datatset
+if ds == 2
+    fid = fopen('data/parking/poses.txt') ;  % open the text file
+    rawPoses = textscan(fid, '%f');   % text scan the data
+    fclose(fid);      % close the file
+    groundTruth = reshape(rawPoses{1}, 12, [])';
+    groundTruthPose = groundTruth(:,[4,8,12]);
+else
+    groundTruthPose = [];
+end
 
 numFrames = 20;
 % x and z since matlab uses x and y for the horizontal plane, and y for up
 % and down
-[fig, topViewLandmarksX, topViewLandmarksZ, topViewCarX, topViewCarZ] = createFigure(50, numFrames);
+[fig, topViewLandmarksX, topViewLandmarksZ, topViewCarX, topViewCarZ] = createFigure(50, numFrames, ds);
 topViewLastCell = 1;
 
 % get first images of dataset, as well as camera instrinsics
@@ -27,7 +38,6 @@ S.F = [];
 S.T = [];
 
 i = parameters.bootstrapFrame2 + 1;
-
 
 while true
     img1 = img2;
@@ -64,7 +74,8 @@ while true
 
     updateFigure(fig, img2, i, P2, row2,...
                 [T(1,4),T(3,4)], topViewLandmarksX, topViewLandmarksZ, ...
-                topViewCarX, topViewCarZ);
+                topViewCarX, topViewCarZ, groundTruthPose);
     S = S2;
+    
     pause(0.1)
 end
