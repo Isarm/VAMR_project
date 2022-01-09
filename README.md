@@ -4,9 +4,9 @@
 
 First, we need to initialize our MATLAB's workspace executing:
 
-'''
+```
 init_workspace
-'''
+```
 
 Run the main file in `src/main.m`. Change datasets by changing the `ds` parameter.
 
